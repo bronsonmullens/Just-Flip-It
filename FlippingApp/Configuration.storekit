@@ -88,7 +88,44 @@
     ]
   },
   "subscriptionGroups" : [
+    {
+      "id" : "65FB9294",
+      "localizations" : [
 
+      ],
+      "name" : "Subscriptions",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "58C9F371",
+          "introductoryOffer" : {
+            "displayPrice" : "0.99",
+            "internalID" : "C74BF4BE",
+            "paymentMode" : "none"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "justflipit.subscription.general",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "General Subscription",
+          "subscriptionGroupID" : "65FB9294",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
   ],
   "version" : {
     "major" : 3,

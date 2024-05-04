@@ -21,6 +21,7 @@ struct SettingsView: View {
     @State private var showingPrivacyPolicyPage: Bool = false
     @State private var showingDeletionAlert: Bool = false
     @State private var itemTypeToDelete: DeleteType?
+    @State private var showingEmailUnavailableAlert: Bool = false
     
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     private let supportVideoLink = "https://youtu.be/IU6uj-rIe5s"
@@ -117,17 +118,22 @@ struct SettingsView: View {
                     })
                     
                     Button(action: {
-                        self.showingMailView.toggle()
-                        
+                        if mailButtonEnabled {
+                            self.showingMailView.toggle()
+                        } else {
+                            self.showingEmailUnavailableAlert.toggle()
+                        }
                     }, label: {
                         if mailButtonEnabled {
                             Text("📧 Email Feedback")
                         } else {
-                            Text("Email Feedback Unavailable")
+                            HStack {
+                                Image(systemName: "info.circle")
+                                Text("Email Feedback Unavailable")
+                            }
+                            .foregroundStyle(.gray)
                         }
-                        
                     })
-                    .disabled(mailButtonEnabled == false)
                     
                     Button(action: {
                         self.openYouTubeSupport()
@@ -183,7 +189,7 @@ struct SettingsView: View {
         })
         .sheet(isPresented: $showingSubscribePage, content: {
             SubscribePage()
-                .presentationDetents([.height(400)])
+                .presentationDetents([.height(600)])
                 .presentationDragIndicator(.hidden)
         })
         .sheet(isPresented: $showingPrivacyPolicyPage, content: {
@@ -197,7 +203,11 @@ struct SettingsView: View {
         } message: {
             Text("This will permanently delete the chosen data. Are you sure you want to proceed?")
         }
-
+        .alert("Email Unavailable", isPresented: $showingEmailUnavailableAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("If you would like to get into contact with me, find me on X @bronsonmullens or email me at bronsonmullens@icloud.com")
+        }
     }
 }
 
@@ -279,6 +289,7 @@ struct SubscribePage: View {
             
             SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
                 .storeButton(.visible, for: .restorePurchases, .redeemCode)
+                .subscriptionStoreButtonLabel(.price)
             
             VStack(alignment: .leading) {
                 if showingWhatsIncluded {
