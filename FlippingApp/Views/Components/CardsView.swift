@@ -87,7 +87,7 @@ struct ProfitCardContent: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Profit")
+                Text("Net Profit")
                     .font(.headline)
                     .foregroundStyle(.white)
                 Spacer()
@@ -120,7 +120,7 @@ struct TotalValueCardContent: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Total Value")
+                Text("Total Inventory Value")
                     .font(.headline)
                     .foregroundStyle(.white)
                 Text("\(totalValue.formatted(.currency(code: "USD")))")

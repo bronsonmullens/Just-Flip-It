@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MainView: View {
-    @State private var selectedItem: Item?
-    
     var body: some View {
         TabView {
             HomeView()
@@ -20,11 +18,19 @@ struct MainView: View {
                     )
                 }
 
-            SearchView(selectedItem: $selectedItem)
+            InventoryView(searchMode: .inventory)
                 .tabItem {
                     Label(
-                        title: { Text("Search") },
-                        icon: { Image(systemName: "magnifyingglass") }
+                        title: { Text("Inventory") },
+                        icon: { Image(systemName: "list.bullet.clipboard.fill") }
+                    )
+                }
+            
+            InventoryView(searchMode: .receipts)
+                .tabItem {
+                    Label(
+                        title: { Text("Receipts") },
+                        icon: { Image(systemName: "dollarsign.circle.fill") }
                     )
                 }
 

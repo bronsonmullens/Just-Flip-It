@@ -20,6 +20,10 @@ class ItemController: ObservableObject {
     var modelContainer: ModelContainer
 
     // MARK: - Calculation Methods
+    
+    func calculateProfitForItem(_ item: Item) -> Double {
+        return (item.listedPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
+    }
 
     func calculateProfit(using items: [Item]) -> Double {
         var profit: Double = 0.0
@@ -253,7 +257,7 @@ class ItemController: ObservableObject {
 
         for oldInventoryItem in oldInventory {
             let newItem = Item(title: oldInventoryItem.title,
-                               id: UUID().uuidString,
+                               imageData: nil,
                                quantity: oldInventoryItem.quantity,
                                purchaseDate: oldInventoryItem.listedDate ?? nil,
                                purchasePrice: oldInventoryItem.purchasePrice,
@@ -266,7 +270,7 @@ class ItemController: ObservableObject {
 
         for oldSoldItem in oldSoldItems {
             let newItem = Item(title: oldSoldItem.title,
-                               id: UUID().uuidString,
+                               imageData: nil,
                                quantity: oldSoldItem.quantity,
                                purchaseDate: nil,
                                purchasePrice: oldSoldItem.purchasePrice,

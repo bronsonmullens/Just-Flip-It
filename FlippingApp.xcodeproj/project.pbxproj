@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2C4E52ED2BE49FC7000A4BB2 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E52EC2BE49FC7000A4BB2 /* MailView.swift */; };
+		2C4E52EF2BE73BD1000A4BB2 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E52EE2BE73BD1000A4BB2 /* InventoryView.swift */; };
+		2CA581652BEDE97500DA1A22 /* AddInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */; };
+		2CA581672BF000CA00DA1A22 /* EditInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */; };
 		E3079D952AC774E4003D6CE7 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079D942AC774E4003D6CE7 /* Item.swift */; };
 		E3079D972AC77505003D6CE7 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079D962AC77505003D6CE7 /* Tag.swift */; };
 		E3079D992AC7754D003D6CE7 /* Just_Flip_ItApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079D982AC7754D003D6CE7 /* Just_Flip_ItApp.swift */; };
@@ -19,12 +22,9 @@
 		E3079DA72AC778B6003D6CE7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DA62AC778B6003D6CE7 /* Theme.swift */; };
 		E3079DAA2AC7791B003D6CE7 /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DA92AC7791B003D6CE7 /* CardsView.swift */; };
 		E3079DAC2AC77E8A003D6CE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3079DAB2AC77E8A003D6CE7 /* LaunchScreen.storyboard */; };
-		E3079DAE2AC77F5A003D6CE7 /* AddInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DAD2AC77F5A003D6CE7 /* AddInventoryItemView.swift */; };
 		E3079DB02AC77F77003D6CE7 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DAF2AC77F77003D6CE7 /* TagView.swift */; };
-		E3079DB22AC77FA6003D6CE7 /* EditInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB12AC77FA6003D6CE7 /* EditInventoryItemView.swift */; };
 		E3079DB42AC77FF1003D6CE7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB32AC77FF1003D6CE7 /* Extensions.swift */; };
 		E3079DB62AC7801A003D6CE7 /* ReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */; };
-		E3079DB82AC780CD003D6CE7 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB72AC780CD003D6CE7 /* SearchView.swift */; };
 		E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB92AC78107003D6CE7 /* StatsView.swift */; };
 		E3079DBC2AC7811C003D6CE7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */; };
 		E36A329625DD387E006286DA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E36A329525DD387E006286DA /* StoreKit.framework */; };
@@ -35,6 +35,9 @@
 
 /* Begin PBXFileReference section */
 		2C4E52EC2BE49FC7000A4BB2 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
+		2C4E52EE2BE73BD1000A4BB2 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
+		2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryItemView.swift; sourceTree = "<group>"; };
+		2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryItemView.swift; sourceTree = "<group>"; };
 		E3079D932AC77323003D6CE7 /* FlippingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlippingApp.entitlements; sourceTree = "<group>"; };
 		E3079D942AC774E4003D6CE7 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		E3079D962AC77505003D6CE7 /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
@@ -47,12 +50,9 @@
 		E3079DA62AC778B6003D6CE7 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		E3079DA92AC7791B003D6CE7 /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsView.swift; sourceTree = "<group>"; };
 		E3079DAB2AC77E8A003D6CE7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		E3079DAD2AC77F5A003D6CE7 /* AddInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryItemView.swift; sourceTree = "<group>"; };
 		E3079DAF2AC77F77003D6CE7 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
-		E3079DB12AC77FA6003D6CE7 /* EditInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryItemView.swift; sourceTree = "<group>"; };
 		E3079DB32AC77FF1003D6CE7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptView.swift; sourceTree = "<group>"; };
-		E3079DB72AC780CD003D6CE7 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		E3079DB92AC78107003D6CE7 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E36A329525DD387E006286DA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
@@ -82,7 +82,7 @@
 				E3079DA82AC7790F003D6CE7 /* Components */,
 				E3079D9C2AC775C3003D6CE7 /* MainView.swift */,
 				E3079DA42AC77818003D6CE7 /* HomeView.swift */,
-				E3079DB72AC780CD003D6CE7 /* SearchView.swift */,
+				2C4E52EE2BE73BD1000A4BB2 /* InventoryView.swift */,
 				E3079DB92AC78107003D6CE7 /* StatsView.swift */,
 				E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */,
 			);
@@ -92,8 +92,8 @@
 		E3079DA82AC7790F003D6CE7 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				E3079DAD2AC77F5A003D6CE7 /* AddInventoryItemView.swift */,
-				E3079DB12AC77FA6003D6CE7 /* EditInventoryItemView.swift */,
+				2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */,
+				2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */,
 				E3C3F71E2ACB0A28006E53B9 /* SellInventoryItemView.swift */,
 				E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */,
 				E3079DA92AC7791B003D6CE7 /* CardsView.swift */,
@@ -251,11 +251,10 @@
 			files = (
 				E3079DAA2AC7791B003D6CE7 /* CardsView.swift in Sources */,
 				E3079DA52AC77818003D6CE7 /* HomeView.swift in Sources */,
-				E3079DAE2AC77F5A003D6CE7 /* AddInventoryItemView.swift in Sources */,
+				2CA581652BEDE97500DA1A22 /* AddInventoryItemView.swift in Sources */,
 				E3079DB62AC7801A003D6CE7 /* ReceiptView.swift in Sources */,
+				2CA581672BF000CA00DA1A22 /* EditInventoryItemView.swift in Sources */,
 				E3079D972AC77505003D6CE7 /* Tag.swift in Sources */,
-				E3079DB22AC77FA6003D6CE7 /* EditInventoryItemView.swift in Sources */,
-				E3079DB82AC780CD003D6CE7 /* SearchView.swift in Sources */,
 				E3C3F71F2ACB0A28006E53B9 /* SellInventoryItemView.swift in Sources */,
 				E3079DA12AC77665003D6CE7 /* CustomLogger.swift in Sources */,
 				E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */,
@@ -267,6 +266,7 @@
 				E3079D9F2AC77642003D6CE7 /* ItemController.swift in Sources */,
 				E3079DA72AC778B6003D6CE7 /* Theme.swift in Sources */,
 				E3079DA32AC776AC003D6CE7 /* OldItem.swift in Sources */,
+				2C4E52EF2BE73BD1000A4BB2 /* InventoryView.swift in Sources */,
 				2C4E52ED2BE49FC7000A4BB2 /* MailView.swift in Sources */,
 				E3079DBC2AC7811C003D6CE7 /* SettingsView.swift in Sources */,
 			);

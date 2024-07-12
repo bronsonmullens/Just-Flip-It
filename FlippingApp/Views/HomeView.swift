@@ -15,7 +15,6 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            // Top content
             HStack {
                 Spacer()
                 Menu {
@@ -49,6 +48,7 @@ struct HomeView: View {
             AddInventoryItemView(isPresented: $presentingAddToInventorySheet)
         }
         .sheet(isPresented: $presentingSellItemSheet) {
+            // TODO: Revise
             SellInventoryItemView(isPresented: $presentingSellItemSheet)
         }
     }

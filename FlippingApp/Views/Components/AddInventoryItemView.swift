@@ -2,192 +2,251 @@
 //  AddInventoryItemView.swift
 //  FlippingApp
 //
-//  Created by Bronson Mullens on 9/29/23.
+//  Created by Bronson Mullens on 5/9/24.
 //
 
 import SwiftUI
 import SwiftData
-
-fileprivate enum InputError: String {
-    case excessiveQuantity = "Quantity must be between 1 and 9,999."
-    case excessivePurchasePrice = "Purchase price must be between $0 and $99,999"
-    case excessiveListedPrice = "Listed price must be between $0 and $99,999"
-}
+import PhotosUI
 
 struct AddInventoryItemView: View {
     @Environment(\.modelContext) private var modelContext
-
-    @Query private var items: [Item]
-
+    
     @Binding var isPresented: Bool
-
-    @State private var title: String = ""
-    @State private var quantity: Int = 1
+    
+    @State private var title: String?
+    @State private var quantity: Int?
+    @State private var itemImage: PhotosPickerItem?
+    @State private var imageData: Data?
     @State private var purchasePrice: Double?
-    @State private var purchaseDate: Date = Date()
+    @State private var purchaseDate: Date?
     @State private var listedPrice: Double?
     @State private var tag: Tag?
-    @State private var notes: String = ""
+    @State private var notes: String?
+    
     @State private var inputError: InputError?
     @State private var presentingInputErrorAlert: Bool = false
-    @State private var presentingTagView: Bool = false
-
-    private var addButtonDisabled: Bool {
-        if title.isEmpty == false &&
-            quantity >= 1 &&
-            purchasePrice ?? -1 >= 0.0 &&
-            listedPrice ?? -1 >= 0.0 {
-            return false
-        }
-
-        return true
-    }
-
+    @State private var presentingTagPicker: Bool = false
+    @State private var purchaseDatePickerShown: Bool = false
+    
     private func validateInputData() -> Bool {
-        if quantity > 9_999 {
-            inputError = InputError.excessiveQuantity
+        guard let quantity = quantity,
+              let purchasePrice = purchasePrice,
+              let listedPrice = listedPrice else {
             return false
         }
-
-        if let purchasePrice = purchasePrice, purchasePrice > 99_999 {
-            inputError = InputError.excessivePurchasePrice
+        
+        if quantity < 0 {
+            inputError = InputError.invalidQuantity
             return false
         }
-
-        if let listedPrice = listedPrice, listedPrice > 99_999 {
-            inputError = InputError.excessiveListedPrice
+        
+        if purchasePrice < 0 {
+            inputError = InputError.invalidPurchasePrice
+            return false
         }
-
+        
+        if listedPrice < 0 {
+            inputError = InputError.invalidListedPrice
+        }
+        
         return true
     }
-
+    
+    private func createNewItem() {
+        if validateInputData() {
+            guard let title = title,
+                  let quantity = quantity,
+                  let purchasePrice = purchasePrice,
+                  let listedPrice = listedPrice else {
+                log.error("Data missing from text field.")
+                return
+            }
+            
+            let newItem = Item(title: title,
+                               imageData: imageData,
+                               quantity: quantity,
+                               purchaseDate: purchaseDate,
+                               purchasePrice: purchasePrice,
+                               listedPrice: listedPrice,
+                               notes: notes)
+            
+            modelContext.insert(newItem)
+            log.info("\(title) inventory item created.")
+            
+            self.isPresented.toggle()
+        } else {
+            log.error("Could not validate item data during item creation.")
+        }
+    }
+    
     var body: some View {
-        ScrollView {
-            VStack {
-                HStack {
-                    Button {
-                        isPresented = false
-                    } label: {
-                        Text("Cancel")
-                            .foregroundStyle(.red)
-                    }
-
-                    Spacer()
-
-                    Text("New Item")
-                        .font(.headline)
-
-                    Spacer()
-
-                    Button {
-                        if validateInputData() {
-                            let newItem = Item(title: title,
-                                               id: UUID().uuidString,
-                                               quantity: quantity,
-                                               purchaseDate: purchaseDate,
-                                               purchasePrice: purchasePrice ?? 0,
-                                               listedPrice: listedPrice ?? 0,
-                                               tag: tag,
-                                               notes: notes)
-                            modelContext.insert(newItem)
-                            // Save?
-                            isPresented = false
-                        } else {
-                            self.presentingInputErrorAlert = true
-                        }
-
-                    } label: {
-                        Text("Add")
-                            .foregroundStyle(Color.accentColor)
-                    }
-                    .disabled(addButtonDisabled)
+        VStack {
+            HStack {
+                Button {
+                    self.isPresented = false
+                } label: {
+                    Text("Cancel")
+                        .foregroundStyle(.red)
                 }
-                .padding()
-
+                Spacer()
+                
+                Text("New Item")
+                    .font(.headline)
+                
+                Spacer()
+                
+                Button {
+                    createNewItem()
+                } label: {
+                    Text("Add")
+                }
+                .disabled(validateInputData() == false)
+            }
+            .padding()
+            
+            
+            ScrollView {
                 Form {
                     Section {
-                        TextField("Title", text: $title)
-
+                        TextField("Title", text: $title.toUnwrapped(defaultValue: ""))
+                        
                         HStack {
                             Text("Quantity")
-
-                            TextField("", value: $quantity, format: .number)
-                                .multilineTextAlignment(.trailing)
+                            
+                            TextField("", value: $quantity, format: .number, prompt: Text("1"))
                                 .keyboardType(.numberPad)
+                                .multilineTextAlignment(.trailing)
                         }
                     }
-
+                    
+                    Section {
+                        if let imageData, let uiImage = UIImage(data: imageData) {
+                            HStack(alignment: .center) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 120)
+                                Spacer()
+                                Button {
+                                    self.imageData = nil
+                                    self.itemImage = nil
+                                } label: {
+                                    Text("Remove Image")
+                                }
+                            }
+                        } else {
+                            HStack {
+                                Text("Add a photo?")
+                                Spacer()
+                                PhotosPicker(selection: $itemImage,
+                                             matching: .images,
+                                             photoLibrary: .shared()) {
+                                    Text("Select an image")
+                                }
+                                             .onChange(of: itemImage) { newImage in
+                                                 Task {
+                                                     if let data = try? await newImage?.loadTransferable(type: Data.self) {
+                                                         self.imageData = data
+                                                     }
+                                                 }
+                                             }
+                            }
+                        }
+                    }
+                    
                     Section {
                         HStack {
-                            Text("Purchase Price")
-
+                            Text("Cost per item")
+                            Spacer()
                             TextField("", value: $purchasePrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
-
-                        DatePicker(
-                            "Purchase Date",
-                            selection: $purchaseDate,
-                            displayedComponents: [.date]
-                        )
+                        
+                        if purchaseDatePickerShown {
+                            HStack {
+                                DatePicker(
+                                    "Purchase Date",
+                                    selection: $purchaseDate.toUnwrapped(defaultValue: .now),
+                                    displayedComponents: [.date]
+                                )
+                                
+                                Button {
+                                    self.purchaseDatePickerShown.toggle()
+                                    self.purchaseDate = nil
+                                } label: {
+                                    Image(systemName: "x.circle.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: 24)
+                                }
+                                
+                            }
+                        } else {
+                            Button {
+                                self.purchaseDatePickerShown.toggle()
+                            } label: {
+                                Text("Tap to add a purchase date")
+                            }
+                        }
                     }
-
+                    
                     Section {
                         HStack {
-                            Text("Listed Price")
-
+                            Text("Price per item")
+                            Spacer()
                             TextField("", value: $listedPrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
                     }
-
+                    
                     Section {
                         HStack {
-                            Text("Add Tag")
-
+                            Text("Add a tag?")
+                            
                             Spacer()
-
+                            
                             Button {
-                                presentingTagView.toggle()
+                                self.presentingTagPicker.toggle()
                             } label: {
                                 if let tag = tag {
                                     Text(tag.title)
                                 } else {
-                                    Text("None")
+                                    Text("Tap here")
                                 }
                             }
-
                         }
-
-                        // TODO: Fix alignment
-                        VStack(alignment: .leading) {
-                            Text("Notes")
-
-                            TextEditor(text: $notes)
-                                .frame(minHeight: 50)
-                        }
+                        
+                        TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
+                            .frame(minHeight: 50)
                     }
                 }
                 .frame(height: UIScreen.main.bounds.height)
                 .ignoresSafeArea(edges: .bottom)
-
-                Spacer()
+                .alert("Input error", isPresented: $presentingInputErrorAlert, actions: {
+                    //
+                }, message: {
+                    if let inputError = inputError {
+                        Text(inputError.rawValue)
+                    } else {
+                        Text("An unknown error occured.")
+                    }
+                })
             }
-            .alert("Input Error", isPresented: $presentingInputErrorAlert, actions: {
-                //
-            }, message: {
-                if let inputError = inputError {
-                    Text("\(inputError.rawValue)")
-                } else {
-                    Text("An unknown error occured.")
-                }
+            .popover(isPresented: $presentingTagPicker, content: {
+                TagView(isPresented: $presentingTagPicker, tag: $tag)
             })
-        }
-        .popover(isPresented: $presentingTagView) {
-            TagView(isPresented: $presentingTagView, tag: $tag)
         }
     }
 }
 
+// MARK: - Errors
+
+enum InputError: String {
+    case invalidQuantity = "Quantity must be between at least 1."
+    case invalidPurchasePrice = "Purchase price must be at least $0."
+    case invalidListedPrice = "Listed price must be at least $0."
+}

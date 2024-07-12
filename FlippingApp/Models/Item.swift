@@ -9,17 +9,18 @@ import Foundation
 import SwiftData
 
 @Model
-class Item {
+class Item: Identifiable {
     // Inventory Properties
     var title: String = ""
     var id: String = UUID().uuidString
+    var imageData: Data?
     var quantity: Int = 1
     var automaticallyDeleteWhenStockDepleted: Bool = false
     var purchaseDate: Date?
     var purchasePrice: Double = 0.00
     var listedPrice: Double = 0.00
     @Relationship(inverse: \Tag.item) var tag: Tag?
-    var notes: String = ""
+    var notes: String?
 
     // Sold Item Properties
     var soldDate: Date?
@@ -27,9 +28,10 @@ class Item {
     var otherFees: Double?
     var soldPrice: Double?
 
-    init(title: String, id: String, quantity: Int, purchaseDate: Date?, purchasePrice: Double, listedPrice: Double, tag: Tag? = nil, notes: String, soldDate: Date? = nil, platformFees: Double? = nil, otherFees: Double? = nil, soldPrice: Double? = nil) {
+    init(title: String, id: String = UUID().uuidString, imageData: Data?, quantity: Int, purchaseDate: Date?, purchasePrice: Double, listedPrice: Double, tag: Tag? = nil, notes: String?, soldDate: Date? = nil, platformFees: Double? = nil, otherFees: Double? = nil, soldPrice: Double? = nil) {
         self.title = title
         self.id = id
+        self.imageData = imageData
         self.quantity = quantity
         self.purchaseDate = purchaseDate
         self.purchasePrice = purchasePrice

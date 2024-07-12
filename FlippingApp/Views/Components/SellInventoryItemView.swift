@@ -22,9 +22,10 @@ struct SellInventoryItemView: View {
     
     var body: some View {
         if let selectedItem = selectedItem {
-            SellItemView(item: $selectedItem.toUnwrapped(defaultValue: Item(title: "", id: "", quantity: -1, purchaseDate: Date(), purchasePrice: 0.00, listedPrice: 0.00, notes: "")))
+            SellItemView(item: $selectedItem.toUnwrapped(defaultValue: Item(title: "", id: "", imageData: nil, quantity: -1, purchaseDate: Date(), purchasePrice: 0.00, listedPrice: 0.00, notes: "")))
         } else {
-            SearchView(inventoryFunction: .sell, selectedItem: $selectedItem)
+            InventoryView(searchMode: .inventory)
+            //SearchView(inventoryFunction: .sell, selectedItem: $selectedItem)
         }
     }
 }
@@ -37,8 +38,8 @@ struct SellItemView: View {
     
     @State private var quantityToSell: Int = 0
     @State private var priceSoldAt: Double = 0.0
-    @State private var saleDate: Date = Date()
-    @State private var notes: String = ""
+    @State private var saleDate: Date?
+    @State private var notes: String?
     
     private var sellButtonEnabled: Bool {
         // Use similar item validation to editinventoryitem and maybe even combine logic in itemController
@@ -51,8 +52,9 @@ struct SellItemView: View {
     }
     
     private func processSale() {
+        // TODO: Image
         let soldItem = Item(title: item.title,
-                            id: UUID().uuidString,
+                            imageData: nil,
                             quantity: quantityToSell,
                             purchaseDate: item.purchaseDate,
                             purchasePrice: item.purchasePrice,
@@ -131,16 +133,19 @@ struct SellItemView: View {
                         .foregroundStyle(.gray)
                     }
                     
-                    DatePicker(
-                        "Sale Date",
-                        selection: $saleDate,
-                        displayedComponents: [.date]
-                    )
+                    if let saleDate = saleDate {
+                        DatePicker(
+                            "Sale Date",
+                            selection: $saleDate.toUnwrapped(defaultValue: Date.now),
+                            displayedComponents: [.date]
+                        )
+                    }
+                    
                 }
                 
                 Section {
                     Text("Notes")
-                    TextEditor(text: $notes)
+                    TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
                         .frame(minHeight: 50)
                 }
                 
