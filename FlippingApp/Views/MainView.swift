@@ -18,7 +18,7 @@ struct MainView: View {
                     )
                 }
 
-            InventoryView(searchMode: .inventory)
+            InventoryView(searchMode: .inventory, sellMode: false)
                 .tabItem {
                     Label(
                         title: { Text("Inventory") },
@@ -26,7 +26,7 @@ struct MainView: View {
                     )
                 }
             
-            InventoryView(searchMode: .receipts)
+            InventoryView(searchMode: .receipts, sellMode: false)
                 .tabItem {
                     Label(
                         title: { Text("Receipts") },

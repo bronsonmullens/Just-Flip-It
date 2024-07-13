@@ -30,7 +30,7 @@
 		E36A329625DD387E006286DA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E36A329525DD387E006286DA /* StoreKit.framework */; };
 		E3B2BF4725D675020026DBB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3B2BF4625D675020026DBB9 /* Assets.xcassets */; };
 		E3BAC83425EA5C2D005C71F4 /* SwiftConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E3BAC83325EA5C2D005C71F4 /* SwiftConfettiView */; };
-		E3C3F71F2ACB0A28006E53B9 /* SellInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C3F71E2ACB0A28006E53B9 /* SellInventoryItemView.swift */; };
+		E3C3F71F2ACB0A28006E53B9 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C3F71E2ACB0A28006E53B9 /* SellItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,7 +60,7 @@
 		E3B2BF3A25D675010026DBB9 /* FlippingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlippingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3B2BF4625D675020026DBB9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E3B2BF4B25D675020026DBB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E3C3F71E2ACB0A28006E53B9 /* SellInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellInventoryItemView.swift; sourceTree = "<group>"; };
+		E3C3F71E2ACB0A28006E53B9 /* SellItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +94,7 @@
 			children = (
 				2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */,
 				2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */,
-				E3C3F71E2ACB0A28006E53B9 /* SellInventoryItemView.swift */,
+				E3C3F71E2ACB0A28006E53B9 /* SellItemView.swift */,
 				E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */,
 				E3079DA92AC7791B003D6CE7 /* CardsView.swift */,
 				E3079DAF2AC77F77003D6CE7 /* TagView.swift */,
@@ -255,7 +255,7 @@
 				E3079DB62AC7801A003D6CE7 /* ReceiptView.swift in Sources */,
 				2CA581672BF000CA00DA1A22 /* EditInventoryItemView.swift in Sources */,
 				E3079D972AC77505003D6CE7 /* Tag.swift in Sources */,
-				E3C3F71F2ACB0A28006E53B9 /* SellInventoryItemView.swift in Sources */,
+				E3C3F71F2ACB0A28006E53B9 /* SellItemView.swift in Sources */,
 				E3079DA12AC77665003D6CE7 /* CustomLogger.swift in Sources */,
 				E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */,
 				E3079D992AC7754D003D6CE7 /* Just_Flip_ItApp.swift in Sources */,

@@ -31,6 +31,7 @@ struct InventoryView: View {
     @State private var showingItemDeletionAlert: Bool = false
     @State private var indexSetOfItemsToDelete: IndexSet?
     @State private var editingItem: Bool = false
+    @State var sellMode: Bool
     
     private var columns: [GridItem] {
         Array(repeatElement(GridItem(.flexible()), count: 2))
@@ -120,10 +121,14 @@ struct InventoryView: View {
                         })
                     }
                     .navigationDestination(for: Item.self) { item in
-                        if item.soldPrice != nil {
-                            ReceiptView(item: item)
+                        if sellMode {
+                            SellItemView(item: item)
                         } else {
-                            EditInventoryItemView(item: item)
+                            if item.soldPrice != nil {
+                                ReceiptView(item: item)
+                            } else {
+                                EditInventoryItemView(item: item)
+                            }
                         }
                     }
                 } else {
@@ -134,10 +139,14 @@ struct InventoryView: View {
                             }
                         }
                         .navigationDestination(for: Item.self) { item in
-                            if item.soldPrice != nil {
-                                ReceiptView(item: item)
+                            if sellMode {
+                                SellItemView(item: item)
                             } else {
-                                EditInventoryItemView(item: item)
+                                if item.soldPrice != nil {
+                                    ReceiptView(item: item)
+                                } else {
+                                    EditInventoryItemView(item: item)
+                                }
                             }
                         }
                     }
@@ -185,7 +194,7 @@ fileprivate struct InventoryRow: View {
                         if let tag = item.tag {
                             Text(tag.title)
                         }
-                        Text("Estimated Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
+                        Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
                             .foregroundStyle(estimatedProfit > 0.00 ? .green : .red)
                     }
                 }
@@ -204,7 +213,13 @@ fileprivate struct InventoryRow: View {
 
 fileprivate struct InventoryGrid: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var itemController: ItemController
+    
     let item: Item
+    
+    private var estimatedProfit: Double {
+        return itemController.calculateProfitForItem(item)
+    }
     
     var body: some View {
         NavigationLink(value: item) {
@@ -236,8 +251,13 @@ fileprivate struct InventoryGrid: View {
                     Text("\(soldPrice.formatted(.currency(code: "USD")))")
                         .foregroundStyle(.gray)
                 } else {
-                    Text("\(item.listedPrice.formatted(.currency(code: "USD")))")
-                        .foregroundStyle(.gray)
+                    VStack {
+                        Text("\(item.listedPrice.formatted(.currency(code: "USD")))")
+                            .foregroundStyle(.gray)
+                        Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
+                            .foregroundStyle(estimatedProfit > 0.00 ? .green : .red)
+                    }
+                    
                 }
             }
         }

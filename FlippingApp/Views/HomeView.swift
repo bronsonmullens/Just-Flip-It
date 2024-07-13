@@ -48,8 +48,7 @@ struct HomeView: View {
             AddInventoryItemView(isPresented: $presentingAddToInventorySheet)
         }
         .sheet(isPresented: $presentingSellItemSheet) {
-            // TODO: Revise
-            SellInventoryItemView(isPresented: $presentingSellItemSheet)
+            InventoryView(searchMode: .inventory, sellMode: true)
         }
     }
 }

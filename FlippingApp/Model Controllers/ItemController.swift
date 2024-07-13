@@ -22,24 +22,22 @@ class ItemController: ObservableObject {
     // MARK: - Calculation Methods
     
     func calculateProfitForItem(_ item: Item) -> Double {
-        return (item.listedPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
+        if let soldPrice = item.soldPrice {
+            let itemValue = (soldPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
+            return Double(item.quantity) * itemValue
+        } else {
+            let itemValue = (item.listedPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
+            return Double(item.quantity) * itemValue
+        }
     }
 
     func calculateProfit(using items: [Item]) -> Double {
         var profit: Double = 0.0
 
         for item in items {
-            // If the item has a sold price, calculate the profit and add to running total
-            if let soldPrice = item.soldPrice {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        profit += soldPrice - (item.purchasePrice + (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-                        count -= 1
-                    }
-                } else {
-                    profit += soldPrice - (item.purchasePrice + (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-                }
+            // If the item has a sold price, calculate the profit and add to the running total
+            if item.soldPrice != nil {
+                profit += calculateProfitForItem(item)
             }
         }
 
@@ -51,18 +49,10 @@ class ItemController: ObservableObject {
 
         for item in items {
             // If the item doesn't have a sold price, calculate the value and add to running total
-            if let _ = item.soldPrice {
+            if item.soldPrice != nil {
                 continue
             } else {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        totalValue += item.listedPrice
-                        count -= 1
-                    }
-                } else {
-                    totalValue += item.listedPrice
-                }
+                totalValue += (Double(item.quantity) * item.listedPrice)
             }
         }
 
@@ -74,18 +64,10 @@ class ItemController: ObservableObject {
 
         for item in items {
             // If the item doesn't have a sold price, calculate the value and add to running total
-            if let _ = item.soldPrice {
+            if item.soldPrice != nil {
                 continue
             } else {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        totalInvestment += item.purchasePrice
-                        count -= 1
-                    }
-                } else {
-                    totalInvestment += item.purchasePrice
-                }
+                totalInvestment += (Double(item.quantity) * item.purchasePrice)
             }
         }
 
@@ -99,15 +81,7 @@ class ItemController: ObservableObject {
             if item.soldPrice != nil {
                 continue
             } else {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        totalInventoryItems += 1
-                        count -= 1
-                    }
-                } else {
-                    totalInventoryItems += 1
-                }
+                totalInventoryItems += item.quantity
             }
         }
 
@@ -119,15 +93,7 @@ class ItemController: ObservableObject {
 
         for item in items {
             if item.soldPrice != nil {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        totalSales += 1
-                        count -= 1
-                    }
-                } else {
-                    totalSales += 1
-                }
+                totalSales += item.quantity
             }
         }
 
@@ -139,15 +105,8 @@ class ItemController: ObservableObject {
 
         for item in items {
             if let soldPrice = item.soldPrice {
-                if item.quantity > 1 {
-                    var count = item.quantity
-                    while count > 0 {
-                        totalSoldItemValue += soldPrice - ((item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-                        count -= 1
-                    }
-                } else {
-                    totalSoldItemValue += soldPrice - ((item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-                }
+                let itemValue = soldPrice - ((item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
+                totalSoldItemValue += Double(item.quantity) * itemValue
             }
         }
 

@@ -25,7 +25,6 @@ struct AddInventoryItemView: View {
     @State private var notes: String?
     
     @State private var inputError: InputError?
-    @State private var presentingInputErrorAlert: Bool = false
     @State private var presentingTagPicker: Bool = false
     @State private var purchaseDatePickerShown: Bool = false
     
@@ -36,18 +35,19 @@ struct AddInventoryItemView: View {
             return false
         }
         
-        if quantity < 0 {
+        if quantity < 0 || quantity > 9_999 {
             inputError = InputError.invalidQuantity
             return false
         }
         
-        if purchasePrice < 0 {
+        if purchasePrice < 0 || purchasePrice > 99_999 {
             inputError = InputError.invalidPurchasePrice
             return false
         }
         
-        if listedPrice < 0 {
+        if listedPrice < 0 || listedPrice > 99_999 {
             inputError = InputError.invalidListedPrice
+            return false
         }
         
         return true
@@ -187,6 +187,7 @@ struct AddInventoryItemView: View {
                         } else {
                             Button {
                                 self.purchaseDatePickerShown.toggle()
+                                self.purchaseDate = .now
                             } label: {
                                 Text("Tap to add a purchase date")
                             }
@@ -226,15 +227,6 @@ struct AddInventoryItemView: View {
                 }
                 .frame(height: UIScreen.main.bounds.height)
                 .ignoresSafeArea(edges: .bottom)
-                .alert("Input error", isPresented: $presentingInputErrorAlert, actions: {
-                    //
-                }, message: {
-                    if let inputError = inputError {
-                        Text(inputError.rawValue)
-                    } else {
-                        Text("An unknown error occured.")
-                    }
-                })
             }
             .popover(isPresented: $presentingTagPicker, content: {
                 TagView(isPresented: $presentingTagPicker, tag: $tag)
