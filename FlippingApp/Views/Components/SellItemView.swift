@@ -105,7 +105,7 @@ struct SellItemView: View {
                             .foregroundStyle(.gray)
                         }
                         
-                        if let saleDate {
+                        if saleDate != nil {
                             DatePicker(
                                 "Sale Date",
                                 selection: $saleDate.toUnwrapped(defaultValue: Date.now),

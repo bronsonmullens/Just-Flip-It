@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @EnvironmentObject private var itemController: ItemController
+    
     var body: some View {
         TabView {
             HomeView()
@@ -50,5 +52,9 @@ struct MainView: View {
                     )
                 }
         }
+        .onAppear {
+            UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
+        }
+        .tint(Color("\(itemController.selectedTheme.rawValue)Text"))
     }
 }

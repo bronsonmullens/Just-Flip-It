@@ -5,10 +5,13 @@
 //  Created by Bronson Mullens on 9/29/23.
 //
 
-import Foundation
+import SwiftUI
 import SwiftData
+import StoreKit
 
 class ItemController: ObservableObject {
+    
+    @AppStorage("selectedTheme") var selectedTheme: ColorTheme = .standard
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
@@ -93,7 +96,7 @@ class ItemController: ObservableObject {
 
         for item in items {
             if item.soldPrice != nil {
-                totalSales += item.quantity
+                totalSales += 1
             }
         }
 

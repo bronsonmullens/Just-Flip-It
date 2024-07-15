@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct StatsView: View {
+    @EnvironmentObject private var itemController: ItemController
+    
     var body: some View {
         ZStack {
             // Background color
-            Color.clear
+            Color("\(itemController.selectedTheme.rawValue)Background")
                 .ignoresSafeArea()
 
             HStack(alignment: .center) {
@@ -19,12 +21,10 @@ struct StatsView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(maxHeight: 72)
-                    .foregroundColor(.gray)
                     .padding()
 
                 VStack(alignment: .leading) {
                     Text("Oh no!")
-                        .foregroundColor(.gray)
                         .font(.title)
                         .fontWeight(.bold)
                     Text("It looks like you haven't purchased a premium subscription yet.")
@@ -33,8 +33,8 @@ struct StatsView: View {
                         .fontWeight(.medium)
                 }
                 .frame(width: 200, height: 200)
-                .foregroundColor(.gray)
             }
+            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
         }
     }
 }

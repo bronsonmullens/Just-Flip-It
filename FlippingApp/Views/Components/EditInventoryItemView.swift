@@ -9,6 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct EditInventoryItemView: View {
+    @EnvironmentObject private var itemController: ItemController
     
     @State private var tag: Tag?
     @State private var itemImage: PhotosPickerItem?
@@ -23,15 +24,19 @@ struct EditInventoryItemView: View {
                 Form {
                     Section {
                         TextField("Title", text: $item.title, prompt: Text("Title"))
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         
                         HStack {
                             Text("Quantity")
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             
                             TextField("", value: $item.quantity, format: .number, prompt: Text("1"))
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         if let imageData = item.imageData, let uiImage = UIImage(data: imageData) {
@@ -48,14 +53,17 @@ struct EditInventoryItemView: View {
                                     self.item.imageData = nil
                                 } label: {
                                     Text("Remove Image")
+                                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 }
                             }
                         } else {
                             HStack {
                                 Text("Add a photo?")
+                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 Spacer()
                                 PhotosPicker(selection: $itemImage, matching: .images, photoLibrary: .shared()) {
                                     Text("Select an image")
+                                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 }
                                 .onChange(of: itemImage) { newImage in
                                     Task {
@@ -67,12 +75,15 @@ struct EditInventoryItemView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
                             Text("Cost per item")
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             Spacer()
                             TextField("", value: $item.purchasePrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
@@ -104,23 +115,29 @@ struct EditInventoryItemView: View {
                                 self.item.purchaseDate = .now
                             } label: {
                                 Text("Tap to add a purchase date")
+                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             }
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
                             Text("Price per item")
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             Spacer()
                             TextField("", value: $item.listedPrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
                             Text("Add a tag?")
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             
                             Spacer()
                             
@@ -131,15 +148,19 @@ struct EditInventoryItemView: View {
                                     Text(tag.title)
                                 } else {
                                     Text("Tap here")
+                                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 }
                             }
                         }
                         
                         TextEditor(text: $item.notes.toUnwrapped(defaultValue: ""))
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             .frame(minHeight: 50)
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                 }
+                .scrollContentBackground(.hidden)
                 .frame(height: UIScreen.main.bounds.height)
                 .ignoresSafeArea(edges: .bottom)
             }
@@ -156,5 +177,7 @@ struct EditInventoryItemView: View {
                 self.tag = tag
             }
         }
+        .navigationTitle(Text("Edit Item"))
+        .background(Color("\(itemController.selectedTheme.rawValue)Background"))
     }
 }

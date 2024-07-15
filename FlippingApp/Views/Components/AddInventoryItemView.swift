@@ -12,6 +12,8 @@ import PhotosUI
 struct AddInventoryItemView: View {
     @Environment(\.modelContext) private var modelContext
     
+    @EnvironmentObject private var itemController: ItemController
+    
     @Binding var isPresented: Bool
     
     @State private var title: String?
@@ -119,6 +121,7 @@ struct AddInventoryItemView: View {
                                 .multilineTextAlignment(.trailing)
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         if let imageData, let uiImage = UIImage(data: imageData) {
@@ -154,6 +157,7 @@ struct AddInventoryItemView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
@@ -193,6 +197,7 @@ struct AddInventoryItemView: View {
                             }
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
@@ -203,6 +208,7 @@ struct AddInventoryItemView: View {
                                 .keyboardType(.decimalPad)
                         }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
                     Section {
                         HStack {
@@ -221,10 +227,16 @@ struct AddInventoryItemView: View {
                             }
                         }
                         
-                        TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
-                            .frame(minHeight: 50)
+                        VStack(alignment: .leading) {
+                            Text("Notes?")
+                            
+                            TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
+                                .frame(minHeight: 50)
+                        }
                     }
+                    .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                 }
+                .scrollContentBackground(.hidden)
                 .frame(height: UIScreen.main.bounds.height)
                 .ignoresSafeArea(edges: .bottom)
             }
@@ -232,6 +244,7 @@ struct AddInventoryItemView: View {
                 TagView(isPresented: $presentingTagPicker, tag: $tag)
             })
         }
+        .background(Color("\(itemController.selectedTheme.rawValue)Background"))
     }
 }
 

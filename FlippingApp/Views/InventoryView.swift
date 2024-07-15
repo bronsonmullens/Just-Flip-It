@@ -21,6 +21,8 @@ enum SearchMode {
 
 struct InventoryView: View {
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var itemController: ItemController
+    
     @Query private var items: [Item]
     
     @AppStorage("viewMode") private var viewMode: ViewMode = .viewBasic
@@ -114,12 +116,14 @@ struct InventoryView: View {
                     List {
                         ForEach(filteredItems) { item in
                             InventoryRow(viewMode: $viewMode, item: item)
+                                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         }
                         .onDelete(perform: { indexSet in
                             self.indexSetOfItemsToDelete = indexSet
                             self.showingItemDeletionAlert = true
                         })
                     }
+                    .scrollContentBackground(.hidden)
                     .navigationDestination(for: Item.self) { item in
                         if sellMode {
                             SellItemView(item: item)
@@ -154,6 +158,7 @@ struct InventoryView: View {
                 
                 Spacer()
             }
+            .background(Color("\(itemController.selectedTheme.rawValue)Background"))
         }
         .padding()
         .searchable(text: $searchText)
@@ -165,6 +170,7 @@ struct InventoryView: View {
         } message: {
             Text("Are you sure you want to delete this item? This is an action that cannot be undone and you will lose this item forever.")
         }
+        .background(Color("\(itemController.selectedTheme.rawValue)Background"))
     }
 }
 
@@ -204,7 +210,7 @@ fileprivate struct InventoryRow: View {
                 if let soldPrice = item.soldPrice {
                     Text("\(soldPrice.formatted(.currency(code: "USD")))")
                 } else {
-                    Text("\(item.listedPrice.formatted(.currency(code: "USD")))")
+                    Text("\(item.listedPrice.formatted(.currency(code: "USD"))) per unit")
                 }
             }
         }
@@ -233,27 +239,27 @@ fileprivate struct InventoryGrid: View {
                     ZStack {
                         RoundedRectangle(cornerRadius: 12)
                             .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(.gray)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         Image(systemName: "shippingbox.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Background"))
                             .frame(width: 96)
                     }
                 }
                 Text(item.title)
                     .font(.headline)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("Quantity: \(item.quantity.formatted())")
                     .font(.caption)
-                    .foregroundStyle(.gray)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 if let soldPrice = item.soldPrice {
                     Text("\(soldPrice.formatted(.currency(code: "USD")))")
-                        .foregroundStyle(.gray)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 } else {
                     VStack {
-                        Text("\(item.listedPrice.formatted(.currency(code: "USD")))")
-                            .foregroundStyle(.gray)
+                        Text("\(item.listedPrice.formatted(.currency(code: "USD"))) per unit")
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
                             .foregroundStyle(estimatedProfit > 0.00 ? .green : .red)
                     }

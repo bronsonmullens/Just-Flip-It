@@ -44,6 +44,7 @@ struct HomeView: View {
 
             Spacer()
         }
+        .background(Color("\(itemController.selectedTheme.rawValue)Background"))
         .sheet(isPresented: $presentingAddToInventorySheet) {
             AddInventoryItemView(isPresented: $presentingAddToInventorySheet)
         }

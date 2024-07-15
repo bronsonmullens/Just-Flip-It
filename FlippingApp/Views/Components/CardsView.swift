@@ -26,6 +26,8 @@ struct CardsView: View {
 }
 
 struct CardView: View {
+    @EnvironmentObject private var itemController: ItemController
+    
     var cardType: CardType
 
     private var height: CGFloat {
@@ -45,7 +47,7 @@ struct CardView: View {
         ZStack {
             RoundedRectangle(cornerRadius: Theme.CardsView.Card.CardCornerRadius)
                 .frame(height: height)
-                .foregroundStyle(Color.accentColor)
+                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                 .shadow(color: .black, radius: 4, x: -2, y: 2)
                 .overlay(
                     ZStack {
