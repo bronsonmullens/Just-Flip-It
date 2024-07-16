@@ -28,7 +28,6 @@
 		E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB92AC78107003D6CE7 /* StatsView.swift */; };
 		E3079DBC2AC7811C003D6CE7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */; };
 		E36A329625DD387E006286DA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E36A329525DD387E006286DA /* StoreKit.framework */; };
-		E37E2DC62C42FD88002F1ED2 /* SubscriptionManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E37E2DC52C42FD88002F1ED2 /* SubscriptionManger.swift */; };
 		E3B2BF4725D675020026DBB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3B2BF4625D675020026DBB9 /* Assets.xcassets */; };
 		E3BAC83425EA5C2D005C71F4 /* SwiftConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E3BAC83325EA5C2D005C71F4 /* SwiftConfettiView */; };
 		E3C3F71F2ACB0A28006E53B9 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C3F71E2ACB0A28006E53B9 /* SellItemView.swift */; };
@@ -58,7 +57,6 @@
 		E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E36A329525DD387E006286DA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		E36A329A25DD3FEA006286DA /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
-		E37E2DC52C42FD88002F1ED2 /* SubscriptionManger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManger.swift; sourceTree = "<group>"; };
 		E3B2BF3A25D675010026DBB9 /* FlippingApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlippingApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3B2BF4625D675020026DBB9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E3B2BF4B25D675020026DBB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,7 +169,6 @@
 			isa = PBXGroup;
 			children = (
 				E3079D9E2AC77642003D6CE7 /* ItemController.swift */,
-				E37E2DC52C42FD88002F1ED2 /* SubscriptionManger.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -259,7 +256,6 @@
 				2CA581672BF000CA00DA1A22 /* EditInventoryItemView.swift in Sources */,
 				E3079D972AC77505003D6CE7 /* Tag.swift in Sources */,
 				E3C3F71F2ACB0A28006E53B9 /* SellItemView.swift in Sources */,
-				E37E2DC62C42FD88002F1ED2 /* SubscriptionManger.swift in Sources */,
 				E3079DA12AC77665003D6CE7 /* CustomLogger.swift in Sources */,
 				E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */,
 				E3079D992AC7754D003D6CE7 /* Just_Flip_ItApp.swift in Sources */,

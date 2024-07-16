@@ -12,19 +12,11 @@ import OSLog
 @main
 struct Just_Flip_It_App: App {
     @StateObject private var itemController: ItemController
-    @StateObject private var subscriptionsManager: SubscriptionsManager
-    @StateObject private var entitlementManager: EntitlementManager
 
     public let log = OSLog(subsystem: "com.bronsonmullens.Just-Flip-It", category: "game")
     var modelContainer: ModelContainer
 
     init() {
-        let entitlementManager = EntitlementManager()
-        let subscriptionsManager = SubscriptionsManager(entitlementManager: entitlementManager)
-        
-        self._entitlementManager = StateObject(wrappedValue: entitlementManager)
-        self._subscriptionsManager = StateObject(wrappedValue: subscriptionsManager)
-        
         do {
             let modelContainer = try ModelContainer(for: Item.self, Tag.self)
             self.modelContainer = modelContainer
@@ -38,8 +30,6 @@ struct Just_Flip_It_App: App {
         WindowGroup {
             MainView()
                 .environmentObject(itemController)
-                .environmentObject(entitlementManager)
-                .environmentObject(subscriptionsManager)
                 .modelContainer(modelContainer)
         }
     }

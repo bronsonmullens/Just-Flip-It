@@ -76,16 +76,6 @@ struct ProfitCardContent: View {
         return itemController.calculateProfit(using: items)
     }
 
-    private var profitValueTextColor: Color {
-        if profit > 0.0 {
-            return .green
-        } else if profit == 0.0 {
-            return .white
-        } else {
-            return .red
-        }
-    }
-
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -95,7 +85,7 @@ struct ProfitCardContent: View {
                 Spacer()
                 Text("\(profit.formatted(.currency(code: "USD")))")
                     .font(.largeTitle)
-                    .foregroundStyle(profitValueTextColor)
+                    .foregroundStyle(.white)
             }
             Spacer()
         }

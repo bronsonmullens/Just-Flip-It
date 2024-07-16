@@ -53,6 +53,7 @@ struct MainView: View {
                 }
         }
         .onAppear {
+            UITabBar.appearance().backgroundColor = .clear
             UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
         }
         .tint(Color("\(itemController.selectedTheme.rawValue)Text"))

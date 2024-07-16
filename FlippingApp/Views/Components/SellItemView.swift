@@ -35,9 +35,8 @@ struct SellItemView: View {
     }
     
     private func processSale() {
-        // TODO: Image
         let soldItem = Item(title: item.title,
-                            imageData: nil,
+                            imageData: item.imageData,
                             quantity: quantityToSell,
                             purchaseDate: item.purchaseDate,
                             purchasePrice: item.purchasePrice,
@@ -56,93 +55,102 @@ struct SellItemView: View {
     }
     
     var body: some View {
-        VStack {
-            ScrollView {
-                Form {
-                    Section {
-                        HStack {
-                            Text("Quantity owned:")
-                            Text("\(item.quantity)")
-                        }
-                        .foregroundStyle(.gray)
-                        
-                        HStack {
-                            Text("Quantity to sell:")
-                            TextField("", value: $quantityToSell, format: .number)
-                                .multilineTextAlignment(.trailing)
-                                .keyboardType(.numberPad)
-                        }
-                    }
-                    
-                    Section {
-                        HStack {
-                            Text("Purchase Price:")
-                            Text("\(item.purchasePrice.formatted(.currency(code: "USD")))")
-                        }
-                        .foregroundStyle(.gray)
-                        
-                        HStack {
-                            Text("Sold Price:")
-                            TextField("$0.00", value: $priceSoldAt, format: .currency(code: "USD"))
-                                .multilineTextAlignment(.trailing)
-                                .keyboardType(.decimalPad)
-                        }
-                        
-                        HStack {
-                            // TODO: Support quantities
-                            Text("Net Profit:")
-                            Text("\((priceSoldAt - item.purchasePrice).formatted(.currency(code: "USD")))")
-                                .foregroundStyle(priceSoldAt - item.purchasePrice >= 0.0 ? .green : .red)
-                        }
-                    }
-                    
-                    Section {
-                        if let purchaseDate = item.purchaseDate {
+        ZStack {
+            Color("\(itemController.selectedTheme.rawValue)Background")
+                .ignoresSafeArea(.all)
+            
+            VStack {
+                ScrollView {
+                    Form {
+                        Section {
                             HStack {
-                                Text("Originally purchased:")
-                                Text("\(purchaseDate.formatted(.dateTime.day().month().year()))")
+                                Text("Quantity owned:")
+                                Text("\(item.quantity)")
                             }
                             .foregroundStyle(.gray)
+                            
+                            HStack {
+                                Text("Quantity to sell:")
+                                TextField("", value: $quantityToSell, format: .number)
+                                    .multilineTextAlignment(.trailing)
+                                    .keyboardType(.numberPad)
+                            }
                         }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         
-                        if saleDate != nil {
-                            DatePicker(
-                                "Sale Date",
-                                selection: $saleDate.toUnwrapped(defaultValue: Date.now),
-                                displayedComponents: [.date]
-                            )
+                        Section {
+                            HStack {
+                                Text("Purchase Price:")
+                                Text("\(item.purchasePrice.formatted(.currency(code: "USD")))")
+                            }
+                            .foregroundStyle(.gray)
+                            
+                            HStack {
+                                Text("Sold Price:")
+                                TextField("$0.00", value: $priceSoldAt, format: .currency(code: "USD"))
+                                    .multilineTextAlignment(.trailing)
+                                    .keyboardType(.decimalPad)
+                            }
+                            
+                            HStack {
+                                // TODO: Support quantities
+                                Text("Net Profit:")
+                                Text("\((priceSoldAt - item.purchasePrice).formatted(.currency(code: "USD")))")
+                                    .foregroundStyle(.white)
+                            }
                         }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         
+                        Section {
+                            if let purchaseDate = item.purchaseDate {
+                                HStack {
+                                    Text("Originally purchased:")
+                                    Text("\(purchaseDate.formatted(.dateTime.day().month().year()))")
+                                }
+                                .foregroundStyle(.gray)
+                            }
+                            
+                            if saleDate != nil {
+                                DatePicker(
+                                    "Sale Date",
+                                    selection: $saleDate.toUnwrapped(defaultValue: Date.now),
+                                    displayedComponents: [.date]
+                                )
+                            }
+                        }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                        
+                        Section {
+                            Text("Notes")
+                            TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
+                                .frame(minHeight: 50)
+                        }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                        
+                        // TODO: Add support for fees
                     }
-                    
-                    Section {
-                        Text("Notes")
-                        TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
-                            .frame(minHeight: 50)
-                    }
-                    
-                    // TODO: Add support for fees
+                    .frame(height: UIScreen.main.bounds.height)
+                    .ignoresSafeArea(edges: .bottom)
+                    .scrollContentBackground(.hidden)
                 }
-                .frame(height: UIScreen.main.bounds.height)
-                .ignoresSafeArea(edges: .bottom)
+                
+                Spacer()
             }
-            
-            Spacer()
-        }
-        .onAppear {
-            self.quantityToSell = item.quantity
-            self.priceSoldAt = item.listedPrice
-            self.notes = item.notes
-        }
-        .toolbar(content: {
-            Button {
-                processSale()
-            } label: {
-                Text("Sell")
+            .onAppear {
+                self.quantityToSell = item.quantity
+                self.priceSoldAt = item.listedPrice
+                self.notes = item.notes
             }
-            .disabled(validateInputData() == false)
-        })
-        .navigationTitle(item.title)
+            .toolbar(content: {
+                Button {
+                    processSale()
+                } label: {
+                    Text("Sell")
+                }
+                .disabled(validateInputData() == false)
+            })
+            .navigationTitle(item.title)
+        }
     }
 }
 

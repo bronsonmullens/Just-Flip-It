@@ -119,7 +119,6 @@ struct SettingsView: View {
                             itemController.selectedTheme = newTheme
                         }
                     }
-                    
                 }
                 .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                 

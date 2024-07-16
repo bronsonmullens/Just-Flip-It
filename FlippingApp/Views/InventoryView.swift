@@ -201,7 +201,7 @@ fileprivate struct InventoryRow: View {
                             Text(tag.title)
                         }
                         Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
-                            .foregroundStyle(estimatedProfit > 0.00 ? .green : .red)
+                            .foregroundStyle(.white)
                     }
                 }
                 
@@ -261,12 +261,10 @@ fileprivate struct InventoryGrid: View {
                         Text("\(item.listedPrice.formatted(.currency(code: "USD"))) per unit")
                             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
-                            .foregroundStyle(estimatedProfit > 0.00 ? .green : .red)
+                            .foregroundStyle(.white)
                     }
-                    
                 }
             }
         }
-        
     }
 }
