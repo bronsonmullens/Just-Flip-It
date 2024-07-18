@@ -31,6 +31,8 @@
 		E3B2BF4725D675020026DBB9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E3B2BF4625D675020026DBB9 /* Assets.xcassets */; };
 		E3BAC83425EA5C2D005C71F4 /* SwiftConfettiView in Frameworks */ = {isa = PBXBuildFile; productRef = E3BAC83325EA5C2D005C71F4 /* SwiftConfettiView */; };
 		E3C3F71F2ACB0A28006E53B9 /* SellItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C3F71E2ACB0A28006E53B9 /* SellItemView.swift */; };
+		E3C693CD2C472718002CE2C9 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = E3C693CC2C472718002CE2C9 /* RevenueCat */; };
+		E3C693CF2C472718002CE2C9 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = E3C693CE2C472718002CE2C9 /* RevenueCatUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,8 +70,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3C693CF2C472718002CE2C9 /* RevenueCatUI in Frameworks */,
 				E36A329625DD387E006286DA /* StoreKit.framework in Frameworks */,
 				E3BAC83425EA5C2D005C71F4 /* SwiftConfettiView in Frameworks */,
+				E3C693CD2C472718002CE2C9 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +195,8 @@
 			name = FlippingApp;
 			packageProductDependencies = (
 				E3BAC83325EA5C2D005C71F4 /* SwiftConfettiView */,
+				E3C693CC2C472718002CE2C9 /* RevenueCat */,
+				E3C693CE2C472718002CE2C9 /* RevenueCatUI */,
 			);
 			productName = FlippingApp;
 			productReference = E3B2BF3A25D675010026DBB9 /* FlippingApp.app */;
@@ -222,6 +228,7 @@
 			mainGroup = E3B2BF3125D675010026DBB9;
 			packageReferences = (
 				E3BAC83225EA5C2D005C71F4 /* XCRemoteSwiftPackageReference "SwiftConfettiView" */,
+				E3C693CB2C472718002CE2C9 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */,
 			);
 			productRefGroup = E3B2BF3B25D675010026DBB9 /* Products */;
 			projectDirPath = "";
@@ -483,6 +490,14 @@
 				minimumVersion = 0.1.1;
 			};
 		};
+		E3C693CB2C472718002CE2C9 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios-spm.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -490,6 +505,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E3BAC83225EA5C2D005C71F4 /* XCRemoteSwiftPackageReference "SwiftConfettiView" */;
 			productName = SwiftConfettiView;
+		};
+		E3C693CC2C472718002CE2C9 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E3C693CB2C472718002CE2C9 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCat;
+		};
+		E3C693CE2C472718002CE2C9 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E3C693CB2C472718002CE2C9 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCatUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

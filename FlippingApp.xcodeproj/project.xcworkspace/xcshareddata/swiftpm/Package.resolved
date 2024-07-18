@@ -1,16 +1,24 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "SwiftConfettiView",
-        "repositoryURL": "https://github.com/theoriginalbit/SwiftConfettiView",
-        "state": {
-          "branch": null,
-          "revision": "70801fc20faf34d136da4985c2b47f4eb4725bdf",
-          "version": "0.2.0"
-        }
+  "originHash" : "8275cbff6ece92edc9c55741dd5306d1c17e6bf8914df6eb07b1074417b40234",
+  "pins" : [
+    {
+      "identity" : "purchases-ios-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios-spm.git",
+      "state" : {
+        "revision" : "65d43f4984c70756aeb14987a1fb7cceb8120bb2",
+        "version" : "5.1.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swiftconfettiview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/theoriginalbit/SwiftConfettiView",
+      "state" : {
+        "revision" : "70801fc20faf34d136da4985c2b47f4eb4725bdf",
+        "version" : "0.2.0"
+      }
+    }
+  ],
+  "version" : 3
 }

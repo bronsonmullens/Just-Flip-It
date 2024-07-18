@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import OSLog
+import RevenueCat
 
 @main
 struct Just_Flip_It_App: App {
@@ -17,6 +18,9 @@ struct Just_Flip_It_App: App {
     var modelContainer: ModelContainer
 
     init() {
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: "appl_HlewlmKSNgSHHaVbpqpoRQfJXot")
+        
         do {
             let modelContainer = try ModelContainer(for: Item.self, Tag.self)
             self.modelContainer = modelContainer

@@ -9,6 +9,7 @@ import SwiftUI
 import StoreKit
 import MessageUI
 import WebKit
+import RevenueCat
 
 struct SettingsView: View {
     @EnvironmentObject private var itemController: ItemController
@@ -22,6 +23,7 @@ struct SettingsView: View {
     @State private var showingDeletionAlert: Bool = false
     @State private var itemTypeToDelete: DeleteType?
     @State private var showingEmailUnavailableAlert: Bool = false
+    @State private var currentOffering: Offering?
     
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     private let supportVideoLink = "https://youtu.be/IU6uj-rIe5s"
@@ -227,7 +229,7 @@ struct SettingsView: View {
                 .presentationDragIndicator(.hidden)
         })
         .sheet(isPresented: $showingSubscribePage, content: {
-            SubscribePage()
+            SubscribePage(currentOffering: $currentOffering)
                 .presentationDetents([.height(600)])
                 .presentationDragIndicator(.hidden)
         })
@@ -248,6 +250,16 @@ struct SettingsView: View {
             Text("If you would like to get into contact with me, find me on X @bronsonmullens or email me at bronsonmullens@icloud.com")
         }
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
+        .onAppear {
+            Purchases.shared.getOfferings { offerings, error in
+                if let offering = offerings?.current, error == nil {
+                    self.currentOffering = offering
+                } else {
+                    log.error("Error: \(error)")
+                }
+                
+            }
+        }
     }
 }
 
@@ -338,56 +350,161 @@ struct SubscribePage: View {
     
     @State private var showingWhatsIncluded: Bool = false
     
+    @Binding var currentOffering: Offering?
+    
     var body: some View {
         ZStack {
             Color("\(itemController.selectedTheme.rawValue)Background")
                 .ignoresSafeArea(.all)
             
             VStack {
-                Text("✨ Premium ✨")
-                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    .font(.title2)
-                    .padding(.top)
-                Text("Thank you for supporting me ❤️")
-                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    .font(.headline)
-                    .padding(.bottom)
-                
-                SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
-                    .storeButton(.visible, for: .restorePurchases, .redeemCode)
-                    .subscriptionStoreButtonLabel(.price)
-                    .tint(.accentColor)
-                
-                VStack(alignment: .leading) {
-                    if showingWhatsIncluded {
-                        VStack(alignment: .center) {
-                            Text("⭐️ Attach images to items ⭐️")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            Text("⭐️ Store item locations ⭐️")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            Text("⭐️ See detailed stats ⭐️")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            Text("⭐️ Try out new themes ⭐️")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                if let currentOffering = currentOffering {
+                    VStack(alignment: .center) {
+                        VStack(alignment: .leading) {
+                            Text("Premium Subscription")
+                                .font(.largeTitle)
+                                .padding(.bottom)
+                            
+                            Text("Unlock everything Just Flip It has to offer for a small monthly fee and support an indie developer.")
+                                .font(.headline)
                         }
-                        .font(.headline)
-                        .foregroundStyle(.cyan)
-                        .transition(.move(edge: .bottom))
-                    } else {
-                        Button(action: {
-                            withAnimation {
-                                self.showingWhatsIncluded = true
+                        .padding(.bottom)
+                        
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Image(systemName: "photo")
+                                Text("Attach images to items")
                             }
-                        }, label: {
-                            Text("What's Included?")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                                .font(.title3)
-                        })
+                            .padding(.bottom)
+                            
+                            HStack {
+                                Image(systemName: "mappin.circle")
+                                Text("Store item locations")
+                            }
+                            .padding(.bottom)
+                            
+                            HStack {
+                                Image(systemName: "chart.bar.xaxis")
+                                Text("See detailed stats")
+                            }
+                            .padding(.bottom)
+                            
+                            HStack {
+                                Image(systemName: "paintbrush")
+                                Text("Apply various themes")
+                            }
+                            .padding(.bottom)
+                        }
+                        .font(.title3)
                     }
+                    
+                    Spacer()
+                    
+                    ForEach(currentOffering.availablePackages) { package in
+                        Button {
+                            Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
+                                if customerInfo?.entitlements["Pro"]?.isActive == true {
+                                    log.info("Premium purchased. Setting hasPremium to true.")
+                                    itemController.hasPremium = true
+                              }
+                            }
+                        } label: {
+                            ZStack {
+                                Rectangle()
+                                    .frame(height: 50)
+                                    .foregroundStyle(Color.accentColor)
+                                    .cornerRadius(12)
+                                
+                                Text("Monthly: \(package.storeProduct.localizedPriceString)")
+                                    .foregroundStyle(.white)
+                            }
+                        }
+                    }
+                    
+                    Button {
+                        Purchases.shared.restorePurchases { customerInfo, error in
+                            
+                            if customerInfo?.entitlements.all["Pro"]?.isActive == true {
+                                log.info("Restoring premium access to user.")
+                                itemController.hasPremium = true
+                            }
+                        }
+                    } label: {
+                        Text("Restore Purchases")
+                    }
+                    
+                    Spacer()
+                    
+                    Text("Take your flipping potential to the next level for less than a cup of coffee. Cancel anytime.")
+                } else {
+                    HStack(alignment: .bottom) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 60)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Something went wrong.")
+                                .bold()
+                            
+                            Text("Please reach out to me at bronsonmullens@icloud.com.")
+                        }
+                    }
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 }
             }
             .padding()
         }
+        
+//        ZStack {
+//            Color("\(itemController.selectedTheme.rawValue)Background")
+//                .ignoresSafeArea(.all)
+//            
+//            VStack {
+//                Text("✨ Premium ✨")
+//                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                    .font(.title2)
+//                    .padding(.top)
+//                Text("Thank you for supporting me ❤️")
+//                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                    .font(.headline)
+//                    .padding(.bottom)
+//                
+//                SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
+//                    .storeButton(.visible, for: .restorePurchases, .redeemCode)
+//                    .subscriptionStoreButtonLabel(.price)
+//                    .tint(.accentColor)
+//                
+//                VStack(alignment: .leading) {
+//                    if showingWhatsIncluded {
+//                        VStack(alignment: .center) {
+//                            Text("⭐️ Attach images to items ⭐️")
+//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                            Text("⭐️ Store item locations ⭐️")
+//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                            Text("⭐️ See detailed stats ⭐️")
+//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                            Text("⭐️ Try out new themes ⭐️")
+//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                        }
+//                        .font(.headline)
+//                        .foregroundStyle(.cyan)
+//                        .transition(.move(edge: .bottom))
+//                    } else {
+//                        Button(action: {
+//                            withAnimation {
+//                                self.showingWhatsIncluded = true
+//                            }
+//                        }, label: {
+//                            Text("What's Included?")
+//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                                .font(.title3)
+//                        })
+//                    }
+//                }
+//            }
+//            .padding()
+//        }
     }
 }
 

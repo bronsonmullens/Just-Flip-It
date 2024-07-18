@@ -7,7 +7,7 @@
 
 import SwiftUI
 import SwiftData
-import StoreKit
+import RevenueCat
 
 class ItemController: ObservableObject {
     
@@ -16,11 +16,17 @@ class ItemController: ObservableObject {
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
         migrateData()
+        
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            self.hasPremium = customerInfo?.entitlements.all["Pro"]?.isActive == true
+        }
     }
 
     // MARK: - Properties
 
     var modelContainer: ModelContainer
+    
+    @Published var hasPremium: Bool = false
 
     // MARK: - Calculation Methods
     
