@@ -10,8 +10,6 @@ import SwiftData
 import RevenueCat
 
 class ItemController: ObservableObject {
-    
-    @AppStorage("selectedTheme") var selectedTheme: ColorTheme = .standard
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
@@ -26,6 +24,7 @@ class ItemController: ObservableObject {
 
     var modelContainer: ModelContainer
     
+    @AppStorage("selectedTheme") var selectedTheme: ColorTheme = .standard
     @Published var hasPremium: Bool = false
 
     // MARK: - Calculation Methods

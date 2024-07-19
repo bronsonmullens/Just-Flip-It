@@ -39,7 +39,6 @@ struct StatsView: View {
                 }
                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
-            
         }
     }
 }
