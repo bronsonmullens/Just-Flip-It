@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
+import Charts
 
 struct StatsView: View {
     @EnvironmentObject private var itemController: ItemController
+    @Query private var items: [Item]
     
     var body: some View {
         ZStack {
@@ -17,7 +20,21 @@ struct StatsView: View {
                 .ignoresSafeArea()
 
             if itemController.hasPremium {
-                Text("Premium ")
+                ZStack {
+                    Color("\(itemController.selectedTheme.rawValue)Background")
+                        .ignoresSafeArea(.all)
+                    
+                    VStack {
+                        ScrollView {
+                            StatsCard()
+                            StatsCard()
+                            StatsCard()
+                            StatsCard()
+                            StatsCard()
+                            StatsCard()
+                        }
+                    }
+                }
             } else {
                 HStack(alignment: .center) {
                     Image(systemName: "cart")
@@ -40,5 +57,19 @@ struct StatsView: View {
                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
         }
+    }
+}
+
+fileprivate struct StatsCard: View {
+    @EnvironmentObject private var itemController: ItemController
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 12)
+            .frame(height: 100)
+            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+            .shadow(color: .black, radius: 4, x: -2, y: 2)
+            .overlay(
+            Text("Sample")
+            )
     }
 }
