@@ -229,7 +229,7 @@ struct SettingsView: View {
                 .presentationDragIndicator(.hidden)
         })
         .sheet(isPresented: $showingSubscribePage, content: {
-            SubscribePage(currentOffering: $currentOffering)
+            SubscribePage(currentOffering: $currentOffering, isPresented: $showingSubscribePage)
                 .presentationDetents([.height(600)])
                 .presentationDragIndicator(.hidden)
         })
@@ -351,6 +351,7 @@ struct SubscribePage: View {
     @State private var showingWhatsIncluded: Bool = false
     
     @Binding var currentOffering: Offering?
+    @Binding var isPresented: Bool
     
     var body: some View {
         ZStack {
@@ -406,6 +407,7 @@ struct SubscribePage: View {
                                 if customerInfo?.entitlements["Pro"]?.isActive == true {
                                     log.info("Premium purchased. Setting hasPremium to true.")
                                     itemController.hasPremium = true
+                                    self.isPresented = false
                               }
                             }
                         } label: {
@@ -418,6 +420,7 @@ struct SubscribePage: View {
                                 Text("Monthly: \(package.storeProduct.localizedPriceString)")
                                     .foregroundStyle(.white)
                             }
+                            .padding(.bottom)
                         }
                     }
                     
@@ -427,6 +430,7 @@ struct SubscribePage: View {
                             if customerInfo?.entitlements.all["Pro"]?.isActive == true {
                                 log.info("Restoring premium access to user.")
                                 itemController.hasPremium = true
+                                self.isPresented = false
                             }
                         }
                     } label: {
