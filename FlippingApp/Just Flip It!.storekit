@@ -1,5 +1,5 @@
 {
-  "identifier" : "B090E4E6",
+  "identifier" : "28369DD3",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -7,11 +7,11 @@
     {
       "displayPrice" : "0.99",
       "familyShareable" : false,
-      "internalID" : "AB9BBC0F",
+      "internalID" : "1554054937",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "For those that want to help support my apps.",
+          "displayName" : "Small Tip",
           "locale" : "en_US"
         }
       ],
@@ -22,11 +22,11 @@
     {
       "displayPrice" : "4.99",
       "familyShareable" : false,
-      "internalID" : "DE54043D",
+      "internalID" : "1554467906",
       "localizations" : [
         {
-          "description" : "",
-          "displayName" : "",
+          "description" : "For those that want to help support my apps.",
+          "displayName" : "Generous Tip",
           "locale" : "en_US"
         }
       ],
@@ -36,7 +36,10 @@
     }
   ],
   "settings" : {
+    "_applicationInternalID" : "1553668128",
+    "_developerTeamID" : "JA7B9846WV",
     "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 743537990.83269405,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -89,11 +92,11 @@
   },
   "subscriptionGroups" : [
     {
-      "id" : "65FB9294",
+      "id" : "21483083",
       "localizations" : [
 
       ],
-      "name" : "Subscriptions",
+      "name" : "General",
       "subscriptions" : [
         {
           "adHocOffers" : [
@@ -105,23 +108,19 @@
           "displayPrice" : "1.99",
           "familyShareable" : false,
           "groupNumber" : 1,
-          "internalID" : "58C9F371",
-          "introductoryOffer" : {
-            "displayPrice" : "0.99",
-            "internalID" : "C74BF4BE",
-            "paymentMode" : "none"
-          },
+          "internalID" : "6502157155",
+          "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "",
-              "displayName" : "",
+              "description" : "Allows full access to the app and themes!",
+              "displayName" : "Premium Subscription",
               "locale" : "en_US"
             }
           ],
           "productID" : "justflipit.subscription.general",
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "General Subscription",
-          "subscriptionGroupID" : "65FB9294",
+          "subscriptionGroupID" : "21483083",
           "type" : "RecurringSubscription"
         }
       ]

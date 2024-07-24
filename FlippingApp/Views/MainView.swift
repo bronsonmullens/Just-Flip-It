@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
+    @AppStorage("firstLaunch") var firstLaunch: Bool = true // TODO: Remove
+    @Environment(\.modelContext) private var modelContext // TODO: Remove
     @EnvironmentObject private var itemController: ItemController
     
     var body: some View {
@@ -55,6 +57,17 @@ struct MainView: View {
         .onAppear {
             UITabBar.appearance().backgroundColor = .clear
             UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
+            
+            if firstLaunch {
+                firstLaunch = false
+                let dummyData = itemController.createDummyItems()
+                
+                for item in dummyData {
+                    modelContext.insert(item)
+                }
+                
+                try? modelContext.save()
+            }
         }
         .tint(Color("\(itemController.selectedTheme.rawValue)Text"))
     }
