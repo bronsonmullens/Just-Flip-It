@@ -45,3 +45,18 @@ extension Calendar {
         return dates
     }
 }
+
+extension Date {
+    static func random(in range: ClosedRange<Date>) -> Date {
+        let diff = range.upperBound.timeIntervalSinceReferenceDate - range.lowerBound.timeIntervalSinceReferenceDate
+        let randomValue = Double.random(in: 0..<diff)
+        return Date(timeIntervalSinceReferenceDate: range.lowerBound.timeIntervalSinceReferenceDate + randomValue)
+    }
+}
+
+extension Double {
+    func rounded(to places: Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}

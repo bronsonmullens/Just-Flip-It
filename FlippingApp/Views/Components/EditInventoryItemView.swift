@@ -46,7 +46,7 @@ struct EditInventoryItemView: View {
                                 Image(uiImage: uiImage)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .cornerRadius(12)
+                                    .cornerRadius(10)
                                     .frame(width: 120)
                                 
                                 Spacer()

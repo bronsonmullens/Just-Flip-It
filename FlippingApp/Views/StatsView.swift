@@ -137,6 +137,8 @@ struct Card<Content: View>: View {
     }
 }
 
+// MARK: - Sales Data Card Content
+
 fileprivate struct SalesDataCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
@@ -252,6 +254,8 @@ fileprivate struct SalesDataCardContent: View {
         }
     }
 }
+
+// MARK: - Inventory Card Content
 
 fileprivate struct InventoryCardContent: View {
     @EnvironmentObject private var itemController: ItemController
@@ -369,6 +373,8 @@ fileprivate struct InventoryCardContent: View {
     }
 }
 
+// MARK: - Top Selling Item Card Content
+
 fileprivate struct TopSellingItemCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
@@ -450,6 +456,8 @@ fileprivate struct TopSellingItemCardContent: View {
         }
     }
 }
+
+// MARK: - Oldest-Newest Info Card Content
 
 fileprivate struct OldestNewestInfoCardContent: View {
     @Query private var items: [Item]

@@ -57,17 +57,6 @@ struct MainView: View {
         .onAppear {
             UITabBar.appearance().backgroundColor = .clear
             UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
-            
-            if firstLaunch {
-                firstLaunch = false
-                let dummyData = itemController.createDummyItems()
-                
-                for item in dummyData {
-                    modelContext.insert(item)
-                }
-                
-                try? modelContext.save()
-            }
         }
         .tint(Color("\(itemController.selectedTheme.rawValue)Text"))
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-enum CardType: CaseIterable {
+fileprivate enum CardType: CaseIterable {
     case profit
     case value
     case sales
@@ -17,53 +17,23 @@ enum CardType: CaseIterable {
 struct CardsView: View {
     var body: some View {
         ScrollView {
-            ForEach(CardType.allCases, id: \.self) { cardType in
-                CardView(cardType: cardType)
+            Card {
+                ProfitCardContent()
+            }
+            
+            Card {
+                SoldItemsCardContent()
+            }
+            
+            Card {
+                TotalValueCardContent()
             }
         }
     }
 }
+// MARK: - Profit Card Content
 
-struct CardView: View {
-    @EnvironmentObject private var itemController: ItemController
-    
-    var cardType: CardType
-
-    private var height: CGFloat {
-        switch cardType {
-        case .profit:
-            return Theme.CardsView.Card.ProfitCardHeight
-        case .value:
-            return Theme.CardsView.Card.ValueCardHeight
-        case .sales:
-            return Theme.CardsView.Card.SalesCardHeight
-        }
-    }
-
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: Theme.CardsView.Card.CardCornerRadius)
-                .frame(height: height)
-                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Foreground"))
-                .shadow(color: .black, radius: 4, x: -2, y: 2)
-                .overlay(
-                    ZStack {
-                        switch cardType {
-                        case .profit:
-                            ProfitCardContent()
-                        case .value:
-                            TotalValueCardContent()
-                        case .sales:
-                            SoldItemsCardContent()
-                        }
-                    }
-                )
-        }
-        .padding()
-    }
-}
-
-struct ProfitCardContent: View {
+fileprivate struct ProfitCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
 
@@ -88,7 +58,9 @@ struct ProfitCardContent: View {
     }
 }
 
-struct TotalValueCardContent: View {
+// MARK: - Total Value Card Content
+
+fileprivate struct TotalValueCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
 
@@ -140,7 +112,9 @@ struct TotalValueCardContent: View {
     }
 }
 
-struct SoldItemsCardContent: View {
+// MARK: - Sold Items Card Content
+
+fileprivate struct SoldItemsCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
 

@@ -41,8 +41,9 @@ struct SellItemView: View {
     }
     
     private var estimatedProfit: Double {
-        
-        return 0.0
+        let fee: Double = priceSoldAt * platformFees
+        let total = ((priceSoldAt - fee) - item.purchasePrice - otherFees) * Double(quantityToSell)
+        return total
     }
     
     private func processSale() {
@@ -109,8 +110,7 @@ struct SellItemView: View {
                             HStack {
                                 Text("Net Profit:")
                                 Spacer()
-                                //
-                                Text("\((priceSoldAt - item.purchasePrice).formatted(.currency(code: "USD")))")
+                                Text("\(estimatedProfit.formatted(.currency(code: "USD")))")
                                     .foregroundStyle(.white)
                             }
                         }
@@ -150,7 +150,7 @@ struct SellItemView: View {
                                     Text("Platform Fees:")
                                 }
                                 
-                                TextField("0%", value: $platformFees, format: .percent)
+                                TextField("%", value: $platformFees, format: .percent)
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
                             }

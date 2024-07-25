@@ -60,158 +60,156 @@ struct SettingsView: View {
         }
     }
     
+    private func generateCSV() -> URL {
+        return URL(string: "www.google.com")!
+    }
+    
     var body: some View {
-        VStack {
-            VStack {
-                Image("JFILogo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(color: .black, radius: 3.0)
-                    .frame(width: 128)
+        Form {
+            Section {
+                Text("👨🏼‍💻 App Version: \(appVersion ?? "Unknown")")
                 
-                HStack {
-                    Text("App Version:")
-                        .bold()
-                    Text(appVersion ?? "Unknown")
-                }
-                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                .bold()
+                Button(action: {
+                    self.showingWhatsNewInfo.toggle()
+                }, label: {
+                    Text("📢 What's New?")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.openTwitterSupport()
+                }, label: {
+                    Text("🐦 Social Media")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.showingPrivacyPolicyPage.toggle()
+                }, label: {
+                    Text("⚖️ Privacy Policy")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
             }
-            .padding(.top)
+            .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
             
-            Form {
-                Section {
-                    Button(action: {
-                        self.showingWhatsNewInfo.toggle()
-                    }, label: {
-                        Text("📢 What's New?")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
+            Section {
+                HStack {
+                    Text("🎨 Select a theme")
+                        .foregroundStyle(itemController.hasPremium ?  Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
                     
-                    Button(action: {
-                        self.openTwitterSupport()
-                    }, label: {
-                        Text("🐦 Social Media")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.showingPrivacyPolicyPage.toggle()
-                    }, label: {
-                        Text("⚖️ Privacy Policy")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                }
-                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
-                
-                Section {
-                    HStack {
-                        Text("Select a theme")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                        
-                        Picker("", selection: $itemController.selectedTheme) {
-                            ForEach(ColorTheme.allCases, id: \.self) {
-                                Text($0.rawValue)
-                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: itemController.selectedTheme) { newTheme in
-                            itemController.selectedTheme = newTheme
-                        }
-                        .disabled(itemController.hasPremium == false)
-                    }
-                }
-                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
-                
-                Section {
-                    Button(action: {
-                        self.showingSubscribePage.toggle()
-                    }, label: {
-                        Text("💸 Subscribe")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.showingTipJarAlert.toggle()
-                    }, label: {
-                        Text("🫙 Tip Jar")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.rateAppRequest()
-                    }, label: {
-                        Text("⭐️ Rate the App")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        if mailButtonEnabled {
-                            self.showingMailView.toggle()
-                        } else {
-                            self.showingEmailUnavailableAlert.toggle()
-                        }
-                    }, label: {
-                        if mailButtonEnabled {
-                            Text("📧 Email Feedback")
+                    Picker("", selection: $itemController.selectedTheme) {
+                        ForEach(ColorTheme.allCases, id: \.self) {
+                            Text($0.rawValue)
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                        } else {
-                            HStack {
-                                Image(systemName: "info.circle")
-                                Text("Email Feedback Unavailable")
-                            }
-                            .foregroundStyle(.gray)
                         }
-                    })
-                    
-                    Button(action: {
-                        self.openYouTubeSupport()
-                    }, label: {
-                        Text("🛟 Help")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: itemController.selectedTheme) { newTheme in
+                        itemController.selectedTheme = newTheme
+                    }
+                    .disabled(itemController.hasPremium == false)
                 }
-                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                 
-                Section {
-                    Button(action: {
-                        self.itemTypeToDelete = .inventory
-                        self.showingDeletionAlert.toggle()
-                    }, label: {
-                        Text("🗑️ Delete Inventory")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.itemTypeToDelete = .soldItems
-                        self.showingDeletionAlert.toggle()
-                    }, label: {
-                        Text("🗑️ Delete Sold Items")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.itemTypeToDelete = .tags
-                        self.showingDeletionAlert.toggle()
-                    }, label: {
-                        Text("🗑️ Delete Tags")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    })
-                    
-                    Button(action: {
-                        self.itemTypeToDelete = .everything
-                        self.showingDeletionAlert.toggle()
-                    }, label: {
-                        Text("⚠️ Delete Everything")
-                            .bold()
-                    })
+                ShareLink(item: generateCSV()) {
+                    Text("📄 Export Inventory")
+                        .foregroundStyle(itemController.hasPremium ? Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
                 }
-                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                .disabled(itemController.hasPremium == false)
+                
+                ShareLink(item: generateCSV()) {
+                    Text("📄 Export Sales")
+                        .foregroundStyle(itemController.hasPremium ? Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
+                }
+                .disabled(itemController.hasPremium == false)
             }
-            .scrollContentBackground(.hidden)
+            .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+            
+            Section {
+                Button(action: {
+                    self.showingSubscribePage.toggle()
+                }, label: {
+                    Text("💸 Subscribe")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.showingTipJarAlert.toggle()
+                }, label: {
+                    Text("🫙 Tip Jar")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.rateAppRequest()
+                }, label: {
+                    Text("⭐️ Rate the App")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    if mailButtonEnabled {
+                        self.showingMailView.toggle()
+                    } else {
+                        self.showingEmailUnavailableAlert.toggle()
+                    }
+                }, label: {
+                    if mailButtonEnabled {
+                        Text("📧 Email Feedback")
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                    } else {
+                        HStack {
+                            Image(systemName: "info.circle")
+                            Text("Email Feedback Unavailable")
+                        }
+                        .foregroundStyle(.gray)
+                    }
+                })
+                
+                Button(action: {
+                    self.openYouTubeSupport()
+                }, label: {
+                    Text("🛟 Help")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+            }
+            .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+            
+            Section {
+                Button(action: {
+                    self.itemTypeToDelete = .inventory
+                    self.showingDeletionAlert.toggle()
+                }, label: {
+                    Text("🗑️ Delete Inventory")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.itemTypeToDelete = .soldItems
+                    self.showingDeletionAlert.toggle()
+                }, label: {
+                    Text("🗑️ Delete Sold Items")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.itemTypeToDelete = .tags
+                    self.showingDeletionAlert.toggle()
+                }, label: {
+                    Text("🗑️ Delete Tags")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
+                
+                Button(action: {
+                    self.itemTypeToDelete = .everything
+                    self.showingDeletionAlert.toggle()
+                }, label: {
+                    Text("⚠️ Delete Everything")
+                        .bold()
+                })
+            }
+            .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
         }
+        .scrollContentBackground(.hidden)
         .sheet(isPresented: $showingWhatsNewInfo, content: {
             WhatsNewView()
                 .presentationDetents([.height(300)])
@@ -380,8 +378,8 @@ struct SubscribePage: View {
                             .padding(.bottom)
                             
                             HStack {
-                                Image(systemName: "mappin.circle")
-                                Text("Store item locations")
+                                Image(systemName: "doc")
+                                Text("Export data as CSV")
                             }
                             .padding(.bottom)
                             
@@ -415,14 +413,14 @@ struct SubscribePage: View {
                                         log.info("Premium purchased. Setting hasPremium to true.")
                                         itemController.hasPremium = true
                                         self.isPresented = false
-                                  }
+                                    }
                                 }
                             } label: {
                                 ZStack {
                                     Rectangle()
                                         .frame(height: 50)
                                         .foregroundStyle(Color.accentColor)
-                                        .cornerRadius(12)
+                                        .cornerRadius(10)
                                     
                                     Text("Monthly: \(package.storeProduct.localizedPriceString)")
                                         .foregroundStyle(.white)
@@ -468,55 +466,55 @@ struct SubscribePage: View {
             .padding()
         }
         
-//        ZStack {
-//            Color("\(itemController.selectedTheme.rawValue)Background")
-//                .ignoresSafeArea(.all)
-//            
-//            VStack {
-//                Text("✨ Premium ✨")
-//                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                    .font(.title2)
-//                    .padding(.top)
-//                Text("Thank you for supporting me ❤️")
-//                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                    .font(.headline)
-//                    .padding(.bottom)
-//                
-//                SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
-//                    .storeButton(.visible, for: .restorePurchases, .redeemCode)
-//                    .subscriptionStoreButtonLabel(.price)
-//                    .tint(.accentColor)
-//                
-//                VStack(alignment: .leading) {
-//                    if showingWhatsIncluded {
-//                        VStack(alignment: .center) {
-//                            Text("⭐️ Attach images to items ⭐️")
-//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                            Text("⭐️ Store item locations ⭐️")
-//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                            Text("⭐️ See detailed stats ⭐️")
-//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                            Text("⭐️ Try out new themes ⭐️")
-//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                        }
-//                        .font(.headline)
-//                        .foregroundStyle(.cyan)
-//                        .transition(.move(edge: .bottom))
-//                    } else {
-//                        Button(action: {
-//                            withAnimation {
-//                                self.showingWhatsIncluded = true
-//                            }
-//                        }, label: {
-//                            Text("What's Included?")
-//                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                                .font(.title3)
-//                        })
-//                    }
-//                }
-//            }
-//            .padding()
-//        }
+        //        ZStack {
+        //            Color("\(itemController.selectedTheme.rawValue)Background")
+        //                .ignoresSafeArea(.all)
+        //
+        //            VStack {
+        //                Text("✨ Premium ✨")
+        //                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                    .font(.title2)
+        //                    .padding(.top)
+        //                Text("Thank you for supporting me ❤️")
+        //                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                    .font(.headline)
+        //                    .padding(.bottom)
+        //
+        //                SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
+        //                    .storeButton(.visible, for: .restorePurchases, .redeemCode)
+        //                    .subscriptionStoreButtonLabel(.price)
+        //                    .tint(.accentColor)
+        //
+        //                VStack(alignment: .leading) {
+        //                    if showingWhatsIncluded {
+        //                        VStack(alignment: .center) {
+        //                            Text("⭐️ Attach images to items ⭐️")
+        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                            Text("⭐️ Store item locations ⭐️")
+        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                            Text("⭐️ See detailed stats ⭐️")
+        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                            Text("⭐️ Try out new themes ⭐️")
+        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                        }
+        //                        .font(.headline)
+        //                        .foregroundStyle(.cyan)
+        //                        .transition(.move(edge: .bottom))
+        //                    } else {
+        //                        Button(action: {
+        //                            withAnimation {
+        //                                self.showingWhatsIncluded = true
+        //                            }
+        //                        }, label: {
+        //                            Text("What's Included?")
+        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+        //                                .font(.title3)
+        //                        })
+        //                    }
+        //                }
+        //            }
+        //            .padding()
+        //        }
     }
 }
 

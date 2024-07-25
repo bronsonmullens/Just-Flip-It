@@ -33,8 +33,8 @@ struct HomeView: View {
                     Image(systemName: "plus")
                         .resizable()
                         .frame(
-                            width: Theme.HomeView.Button.ButtonWidth,
-                            height: Theme.HomeView.Button.ButtonWidth
+                            width: 30,
+                            height: 30
                         )
                 }
             }

@@ -234,10 +234,10 @@ fileprivate struct InventoryGrid: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
                 } else {
                     ZStack {
-                        RoundedRectangle(cornerRadius: 12)
+                        RoundedRectangle(cornerRadius: 10)
                             .aspectRatio(contentMode: .fit)
                             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         Image(systemName: "shippingbox.fill")
