@@ -401,26 +401,33 @@ struct SubscribePage: View {
                     
                     Spacer()
                     
-                    ForEach(currentOffering.availablePackages) { package in
-                        Button {
-                            Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
-                                if customerInfo?.entitlements["Pro"]?.isActive == true {
-                                    log.info("Premium purchased. Setting hasPremium to true.")
-                                    itemController.hasPremium = true
-                                    self.isPresented = false
-                              }
-                            }
-                        } label: {
-                            ZStack {
-                                Rectangle()
-                                    .frame(height: 50)
-                                    .foregroundStyle(Color.accentColor)
-                                    .cornerRadius(12)
-                                
-                                Text("Monthly: \(package.storeProduct.localizedPriceString)")
-                                    .foregroundStyle(.white)
-                            }
+                    if itemController.hasPremium {
+                        Text("You're all set! 😊")
+                            .font(.title)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             .padding(.bottom)
+                    } else {
+                        ForEach(currentOffering.availablePackages) { package in
+                            Button {
+                                Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
+                                    if customerInfo?.entitlements["Pro"]?.isActive == true {
+                                        log.info("Premium purchased. Setting hasPremium to true.")
+                                        itemController.hasPremium = true
+                                        self.isPresented = false
+                                  }
+                                }
+                            } label: {
+                                ZStack {
+                                    Rectangle()
+                                        .frame(height: 50)
+                                        .foregroundStyle(Color.accentColor)
+                                        .cornerRadius(12)
+                                    
+                                    Text("Monthly: \(package.storeProduct.localizedPriceString)")
+                                        .foregroundStyle(.white)
+                                }
+                                .padding(.bottom)
+                            }
                         }
                     }
                     
