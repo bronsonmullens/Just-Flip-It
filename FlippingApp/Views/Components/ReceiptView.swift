@@ -18,24 +18,6 @@ struct ReceiptView: View {
 
     @State private var editMode: Bool = false
 
-    private func calculateProfit(for item: Item) -> Double {
-        var profit: Double = 0.0
-
-        if let soldPrice = item.soldPrice {
-            if item.quantity > 1 {
-                var count = item.quantity
-                while count > 0 {
-                    profit += soldPrice - (item.purchasePrice + (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-                    count -= 1
-                }
-            } else {
-                profit += soldPrice - (item.purchasePrice + (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0))
-            }
-        }
-
-        return profit
-    }
-
     var body: some View {
         ZStack {
             Color("\(itemController.selectedTheme)Background")
@@ -198,7 +180,7 @@ struct ReceiptView: View {
                         if editMode == false {
                             Section {
                                 LabeledContent("Profit") {
-                                    Text("\(calculateProfit(for: item).formatted(.currency(code: "USD")))")
+                                    Text("\(itemController.calculateProfitForItem(item, quantity: item.quantity).formatted(.currency(code: "USD")))")
                                         .bold()
                                 }
                             }

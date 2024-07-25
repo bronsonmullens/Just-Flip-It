@@ -7,10 +7,12 @@
 
 import SwiftUI
 import SwiftData
+import Confetti
 
 struct SellItemView: View {
     @EnvironmentObject private var itemController: ItemController
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.presentationMode) private var presentationMode
     
     let item: Item
     
@@ -38,6 +40,11 @@ struct SellItemView: View {
         return true
     }
     
+    private var estimatedProfit: Double {
+        
+        return 0.0
+    }
+    
     private func processSale() {
         let soldItem = Item(title: item.title,
                             imageData: item.imageData,
@@ -48,14 +55,17 @@ struct SellItemView: View {
                             tag: item.tag,
                             notes: notes,
                             soldDate: saleDate,
+                            platformFees: platformFees,
+                            otherFees: otherFees,
                             soldPrice: priceSoldAt)
         modelContext.insert(soldItem)
         self.item.quantity -= quantityToSell
-        if item.automaticallyDeleteWhenStockDepleted && item.quantity <= 0 {
+        if item.quantity <= 0 {
             modelContext.delete(item)
             log.info("Deleted item with depleted stock: \(item.title)")
         }
         log.info("Created new soldItem: \(soldItem.title) (\(soldItem.id)")
+        presentationMode.wrappedValue.dismiss()
     }
     
     var body: some View {
@@ -97,9 +107,9 @@ struct SellItemView: View {
                             }
                             
                             HStack {
-                                // TODO: Support quantities
                                 Text("Net Profit:")
                                 Spacer()
+                                //
                                 Text("\((priceSoldAt - item.purchasePrice).formatted(.currency(code: "USD")))")
                                     .foregroundStyle(.white)
                             }
@@ -172,8 +182,6 @@ struct SellItemView: View {
                                 .frame(minHeight: 50)
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
-                        
-                        // TODO: Add support for fees
                     }
                     .frame(height: UIScreen.main.bounds.height)
                     .ignoresSafeArea(edges: .bottom)
@@ -183,6 +191,7 @@ struct SellItemView: View {
                 Spacer()
             }
             .onAppear {
+                
                 self.quantityToSell = item.quantity
                 self.priceSoldAt = item.listedPrice
                 self.notes = item.notes
@@ -206,6 +215,8 @@ struct SellItemView: View {
                 .disabled(validateInputData() == false)
             })
             .navigationTitle(item.title)
+            
+            ConfettiView(emissionDuration: 4.0)
         }
     }
 }

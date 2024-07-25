@@ -1,6 +1,15 @@
 {
-  "originHash" : "2c119a7e601bceb3119c626f9474102288576a4f1e2b351a79197fdfad047a7e",
+  "originHash" : "070c1e7e7079ac8a09830bd2c3a0685227b9de79a1914c5787c5b8d14189ad02",
   "pins" : [
+    {
+      "identity" : "confetti-swiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ottijp/confetti-swiftui",
+      "state" : {
+        "revision" : "fe1c8e8e3d45aa677fb9f579664ba99b643569a9",
+        "version" : "0.1.0"
+      }
+    },
     {
       "identity" : "purchases-ios-spm",
       "kind" : "remoteSourceControl",
@@ -8,15 +17,6 @@
       "state" : {
         "revision" : "0d2f1fa050acad0de99b9b0ce45d53c741c20629",
         "version" : "5.2.1"
-      }
-    },
-    {
-      "identity" : "swiftconfettiview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/theoriginalbit/SwiftConfettiView",
-      "state" : {
-        "revision" : "70801fc20faf34d136da4985c2b47f4eb4725bdf",
-        "version" : "0.2.0"
       }
     }
   ],

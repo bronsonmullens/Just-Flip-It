@@ -10,11 +10,13 @@ import PhotosUI
 
 struct EditInventoryItemView: View {
     @EnvironmentObject private var itemController: ItemController
+    @Environment(\.presentationMode) private var presentationMode
     
     @State private var tag: Tag?
     @State private var itemImage: PhotosPickerItem?
     @State private var purchaseDatePickerShown: Bool = false
     @State private var presentingTagPicker: Bool = false
+    @State private var navigateToSellView = false
     
     @Bindable var item: Item
     
@@ -181,8 +183,24 @@ struct EditInventoryItemView: View {
             if let tag = item.tag {
                 self.tag = tag
             }
+            
+            if item.quantity == 0 {
+                log.info("Quantity exhausted. Dismissing edit page.")
+                presentationMode.wrappedValue.dismiss()
+            }
         }
         .navigationTitle(Text("Edit Item"))
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
+        .navigationDestination(isPresented: $navigateToSellView) {
+            SellItemView(item: item)
+        }
+        .toolbar(content: {
+            Button {
+                log.info("Navigating to SellItemView from edit page.")
+                navigateToSellView = true
+            } label: {
+                Text("Sell")
+            }
+        })
     }
 }

@@ -29,13 +29,14 @@ class ItemController: ObservableObject {
 
     // MARK: - Calculation Methods
     
-    func calculateProfitForItem(_ item: Item) -> Double {
+    func calculateProfitForItem(_ item: Item, quantity: Int) -> Double {
         if let soldPrice = item.soldPrice {
-            let itemValue = (soldPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
-            return Double(item.quantity) * itemValue
+            let fee: Double = soldPrice * ((item.platformFees ?? 0.0) / 100)
+            let itemValue: Double = (soldPrice - fee) - item.purchasePrice - (item.otherFees ?? 0.0)
+            return itemValue * Double(quantity)
         } else {
-            let itemValue = (item.listedPrice - item.purchasePrice) - (item.otherFees ?? 0.0) + (item.platformFees ?? 0.0)
-            return Double(item.quantity) * itemValue
+            // We don't ask for fees when adding an item. This is an estimate.
+            return (item.listedPrice - item.purchasePrice) * Double(quantity)
         }
     }
 
@@ -45,7 +46,9 @@ class ItemController: ObservableObject {
         for item in items {
             // If the item has a sold price, calculate the profit and add to the running total
             if item.soldPrice != nil {
-                profit += calculateProfitForItem(item)
+                profit += calculateProfitForItem(item, quantity: item.quantity)
+            } else {
+                
             }
         }
 

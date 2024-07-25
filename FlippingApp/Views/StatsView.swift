@@ -392,7 +392,7 @@ fileprivate struct TopSellingItemCardContent: View {
         
         for soldItem in soldItems {
             if soldItem.title == item.title {
-                count += itemController.calculateProfitForItem(soldItem)
+                count += itemController.calculateProfitForItem(soldItem, quantity: soldItem.quantity)
             }
         }
         

@@ -120,6 +120,7 @@ struct SettingsView: View {
                         .onChange(of: itemController.selectedTheme) { newTheme in
                             itemController.selectedTheme = newTheme
                         }
+                        .disabled(itemController.hasPremium == false)
                     }
                 }
                 .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))

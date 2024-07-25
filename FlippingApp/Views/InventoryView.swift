@@ -184,7 +184,7 @@ fileprivate struct InventoryRow: View {
     @Binding var viewMode: ViewMode
     
     private var estimatedProfit: Double {
-        return itemController.calculateProfitForItem(item)
+        return itemController.calculateProfitForItem(item, quantity: item.quantity)
     }
     
     let item: Item
@@ -224,7 +224,7 @@ fileprivate struct InventoryGrid: View {
     let item: Item
     
     private var estimatedProfit: Double {
-        return itemController.calculateProfitForItem(item)
+        return itemController.calculateProfitForItem(item, quantity: item.quantity)
     }
     
     var body: some View {

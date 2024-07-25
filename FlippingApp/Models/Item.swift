@@ -16,7 +16,6 @@ class Item: Identifiable {
     var dateAdded: Date? = Date()
     var imageData: Data?
     var quantity: Int = 1
-    var automaticallyDeleteWhenStockDepleted: Bool = false
     var purchaseDate: Date?
     var purchasePrice: Double = 0.00
     var listedPrice: Double = 0.00
