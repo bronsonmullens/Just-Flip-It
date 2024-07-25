@@ -14,6 +14,9 @@ struct StatsView: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
     
+    @State private var showingSubscribeSheet: Bool = false
+    @State private var currentOffering: Offering?
+    
     var body: some View {
         ZStack {
             // Background color
@@ -56,8 +59,6 @@ struct StatsView: View {
                                 .fontWeight(.bold)
                             Text("It looks like you haven't purchased a premium subscription yet.")
                                 .padding(.bottom)
-                            Text("Check out the settings tab to get started.")
-                                .fontWeight(.medium)
                         }
                         .frame(width: 200, height: 200)
                     }
@@ -65,6 +66,18 @@ struct StatsView: View {
                     
                     VStack {
                         Spacer()
+                        
+                        Button {
+                            self.showingSubscribeSheet.toggle()
+                        } label: {
+                            Text("Subscribe")
+                                .background(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                                        .frame(width: 160, height: 40)
+                                        .shadow(color: .black, radius: 4, x: -2, y: 2)
+                                )
+                        }
                         
                         Button {
                             Purchases.shared.restorePurchases { customerInfo, error in
@@ -82,6 +95,21 @@ struct StatsView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingSubscribeSheet, content: {
+            SubscribePage(currentOffering: $currentOffering, isPresented: $showingSubscribeSheet)
+                .presentationDetents([.height(600)])
+                .presentationDragIndicator(.hidden)
+        })
+        .onAppear {
+            Purchases.shared.getOfferings { offerings, error in
+                if let offering = offerings?.current, error == nil {
+                    self.currentOffering = offering
+                } else {
+                    log.error("Error: \(error)")
+                }
+                
+            }
+        }
     }
 }
 
@@ -96,7 +124,6 @@ struct Card<Content: View>: View {
     
     var body: some View {
         content
-            .frame(maxWidth: .infinity, minHeight: 80)
             .background(
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color("\(itemController.selectedTheme.rawValue)Foreground"))
@@ -109,6 +136,8 @@ struct Card<Content: View>: View {
 fileprivate struct SalesDataCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
+    
+    @AppStorage("timeFilter") private var timeFilter: TimeFilter = .month
     
     var body: some View {
         HStack {
@@ -123,11 +152,25 @@ fileprivate struct SalesDataCardContent: View {
                     .foregroundStyle(.white)
                     .padding(.bottom)
                 
-                Text("Sales by month")
-                    .font(.title)
-                    .foregroundStyle(.white)
+                HStack {
+                    Text("View sales by ")
+                        .font(.title)
+                        .foregroundStyle(.white)
+                    
+                    Picker("", selection: $timeFilter) {
+                        ForEach(TimeFilter.allCases, id: \.self) { timeFilter in
+                            Text("\(timeFilter.rawValue)")
+                                .font(.title)
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: timeFilter) { newTimeFilter in
+                        self.timeFilter = newTimeFilter
+                    }
+                }
                 
-                SalesChartView()
+                SalesChartView(timeFilter: $timeFilter)
                     .padding(.bottom)
                 
                 Spacer()
@@ -138,31 +181,72 @@ fileprivate struct SalesDataCardContent: View {
         .padding()
     }
     
+    fileprivate enum TimeFilter: String, CaseIterable, Equatable {
+        case week = "Week"
+        case month = "Month"
+    }
+    
     fileprivate struct SalesChartView: View {
         @Query private var items: [Item]
+        @Binding var timeFilter: TimeFilter
         
         var body: some View {
-            let salesData = monthlySalesData()
+            let salesData = salesData(for: timeFilter)
             
-            Chart(salesData, id: \.month) { data in
-                BarMark(
-                    x: .value("Month", data.month, unit: .month),
-                    y: .value("Total Sales", data.totalSales)
-                )
+            if salesData.isEmpty {
+                Text("Sell some items to view this data.")
+                    .foregroundStyle(.white)
+            } else {
+                Chart(salesData, id: \.date) { data in
+                    BarMark(
+                        x: .value("Date", data.date, unit: timeFilter == .week ? .day : .month),
+                        y: .value("Total Sales", data.totalSales)
+                    )
+                }
+                .chartXAxis {
+                    AxisMarks(values: .stride(by: timeFilter == .week ? .day : .month)) { value in
+                        AxisGridLine()
+                        AxisTick()
+                        AxisValueLabel(format: timeFilter == .week ? .dateTime.day() : .dateTime.month(), centered: true)
+                    }
+                }
             }
         }
         
-        private func monthlySalesData() -> [(month: Date, totalSales: Int)] {
+        private func salesData(for timeFilter: TimeFilter) -> [(date: Date, totalSales: Int)] {
             let soldItems = items.filter { $0.soldDate != nil && $0.soldPrice != nil }
             
-            let groupedByMonth = Dictionary(grouping: soldItems) { item in
-                Calendar.current.startOfMonth(for: item.soldDate!)
+            let calendar = Calendar.current
+            let now = Date()
+            let startDate: Date
+            let dateComponent: Calendar.Component
+            
+            switch timeFilter {
+            case .week:
+                startDate = calendar.date(byAdding: .day, value: -7, to: now)!
+                dateComponent = .day
+            case .month:
+                startDate = calendar.date(byAdding: .month, value: -12, to: now)!
+                dateComponent = .month
             }
             
-            return groupedByMonth.map { (month, items) in
-                let totalSales = items.count
-                return (month: month, totalSales: totalSales)
-            }.sorted { $0.month < $1.month }
+            let filteredItems = soldItems.filter { $0.soldDate! >= startDate }
+            
+            let groupedData = Dictionary(grouping: filteredItems) { item in
+                if timeFilter == .week {
+                    return calendar.startOfDay(for: item.soldDate!)
+                } else {
+                    return calendar.date(from: calendar.dateComponents([.year, .month], from: item.soldDate!))!
+                }
+            }
+            
+            return calendar.generateDates(
+                inside: DateInterval(start: startDate, end: now),
+                matching: DateComponents(hour: 0, minute: 0, second: 0)
+            ).map { date in
+                let totalSales = groupedData[date]?.count ?? 0
+                return (date: date, totalSales: totalSales)
+            }
         }
     }
 }
@@ -252,7 +336,7 @@ fileprivate struct TopSellingItemCardContent: View {
 
 fileprivate struct OldestNewestInfoCardContent: View {
     @Query private var items: [Item]
-
+    
     private var recentlyListedItem: Item? {
         if let mostRecentItem = items.max(by: { ($0.purchaseDate ?? Date.distantPast) < ($1.purchaseDate ?? Date.distantPast) }) {
             return mostRecentItem
@@ -260,7 +344,7 @@ fileprivate struct OldestNewestInfoCardContent: View {
             return nil
         }
     }
-
+    
     private var oldestItem: Item? {
         if let oldestItem = items.min(by: { $0.purchaseDate ?? Date() < $1.purchaseDate ?? Date() }) {
             return oldestItem
@@ -268,40 +352,42 @@ fileprivate struct OldestNewestInfoCardContent: View {
             return nil
         }
     }
-
+    
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                if let recentlyListedItem {
-                    Text("Recently Added")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                    Text("\(recentlyListedItem.title)")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                    Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: "USD")))")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                        .padding(.bottom)
+        if recentlyListedItem != nil || oldestItem != nil {
+            HStack {
+                VStack(alignment: .leading) {
+                    if let recentlyListedItem {
+                        Text("Recently Added")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                        Text("\(recentlyListedItem.title)")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                        Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: "USD")))")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                            .padding(.bottom)
+                    }
+                    
+                    Spacer()
+                    
+                    if let oldestItem {
+                        Text("Oldest Item")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                        Text("\(oldestItem.title)")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                        Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: "USD")))")
+                            .font(.title3)
+                            .foregroundStyle(.white)
+                    }
                 }
                 
                 Spacer()
-
-                if let oldestItem {
-                    Text("Oldest Item")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                    Text("\(oldestItem.title)")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                    Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: "USD")))")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                }
             }
-            
-            Spacer()
+            .padding()
         }
-        .padding()
     }
 }

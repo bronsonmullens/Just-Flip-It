@@ -250,7 +250,7 @@ fileprivate struct InventoryGrid: View {
                 Text(item.title)
                     .font(.headline)
                     .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                    .fixedSize(horizontal: true, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                    //.fixedSize(horizontal: true, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
                 Text("Quantity: \(item.quantity.formatted())")
                     .font(.caption)
                     .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
