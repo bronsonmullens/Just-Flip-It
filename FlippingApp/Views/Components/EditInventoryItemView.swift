@@ -57,21 +57,26 @@ struct EditInventoryItemView: View {
                                 }
                             }
                         } else {
-                            HStack {
-                                Text("Add a photo?")
-                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                                Spacer()
-                                PhotosPicker(selection: $itemImage, matching: .images, photoLibrary: .shared()) {
-                                    Text("Select an image")
+                            if itemController.hasPremium {
+                                HStack {
+                                    Text("Add a photo?")
                                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                                }
-                                .onChange(of: itemImage) { newImage in
-                                    Task {
-                                        if let data = try? await newImage?.loadTransferable(type: Data.self) {
-                                            self.item.imageData = data
+                                    Spacer()
+                                    PhotosPicker(selection: $itemImage, matching: .images, photoLibrary: .shared()) {
+                                        Text("Select an image")
+                                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                                    }
+                                    .onChange(of: itemImage) { newImage in
+                                        Task {
+                                            if let data = try? await newImage?.loadTransferable(type: Data.self) {
+                                                self.item.imageData = data
+                                            }
                                         }
                                     }
                                 }
+                            } else {
+                                Text("Subscribe to edit item's photo")
+                                    .foregroundStyle(.gray)
                             }
                         }
                     }

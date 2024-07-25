@@ -13,6 +13,7 @@ class Item: Identifiable {
     // Inventory Properties
     var title: String = ""
     var id: String = UUID().uuidString
+    var dateAdded: Date? = Date()
     var imageData: Data?
     var quantity: Int = 1
     var automaticallyDeleteWhenStockDepleted: Bool = false

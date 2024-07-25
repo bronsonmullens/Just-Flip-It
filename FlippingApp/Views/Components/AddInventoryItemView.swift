@@ -139,21 +139,26 @@ struct AddInventoryItemView: View {
                                 }
                             }
                         } else {
-                            HStack {
-                                Text("Add a photo?")
-                                Spacer()
-                                PhotosPicker(selection: $itemImage,
-                                             matching: .images,
-                                             photoLibrary: .shared()) {
-                                    Text("Select an image")
-                                }
-                                             .onChange(of: itemImage) { newImage in
-                                                 Task {
-                                                     if let data = try? await newImage?.loadTransferable(type: Data.self) {
-                                                         self.imageData = data
+                            if itemController.hasPremium {
+                                HStack {
+                                    Text("Add a photo?")
+                                    Spacer()
+                                    PhotosPicker(selection: $itemImage,
+                                                 matching: .images,
+                                                 photoLibrary: .shared()) {
+                                        Text("Select an image")
+                                    }
+                                                 .onChange(of: itemImage) { newImage in
+                                                     Task {
+                                                         if let data = try? await newImage?.loadTransferable(type: Data.self) {
+                                                             self.imageData = data
+                                                         }
                                                      }
                                                  }
-                                             }
+                                }
+                            } else {
+                                Text("Subscribe to attach a photo")
+                                    .foregroundStyle(.gray)
                             }
                         }
                     }

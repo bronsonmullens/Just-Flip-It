@@ -17,8 +17,12 @@ struct SellItemView: View {
     @State private var quantityToSell: Int = 0
     @State private var priceSoldAt: Double = 0.0
     @State private var saleDate: Date?
+    @State private var platformFees: Double = 0.0
+    @State private var otherFees: Double = 0.0
     @State private var notes: String?
     @State private var sellError: SellError?
+    @State private var showingPlatformFeesInfo: Bool = false
+    @State private var showingOtherFeesInfo: Bool = false
     
     private func validateInputData() -> Bool {
         if quantityToSell < 0 || quantityToSell > item.quantity {
@@ -95,6 +99,7 @@ struct SellItemView: View {
                             HStack {
                                 // TODO: Support quantities
                                 Text("Net Profit:")
+                                Spacer()
                                 Text("\((priceSoldAt - item.purchasePrice).formatted(.currency(code: "USD")))")
                                     .foregroundStyle(.white)
                             }
@@ -121,6 +126,47 @@ struct SellItemView: View {
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         
                         Section {
+                            HStack {
+                                HStack {
+                                    Button {
+                                        self.showingPlatformFeesInfo.toggle()
+                                    } label: {
+                                        Image(systemName: "info.circle")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 20)
+                                    }
+                                    
+                                    Text("Platform Fees:")
+                                }
+                                
+                                TextField("0%", value: $platformFees, format: .percent)
+                                    .multilineTextAlignment(.trailing)
+                                    .keyboardType(.decimalPad)
+                            }
+                            
+                            HStack {
+                                HStack {
+                                    Button {
+                                        self.showingOtherFeesInfo.toggle()
+                                    } label: {
+                                        Image(systemName: "info.circle")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 20)
+                                    }
+                                    
+                                    Text("Other Fees:")
+                                }
+                                
+                                TextField("$0.00", value: $otherFees, format: .currency(code: "USD"))
+                                    .multilineTextAlignment(.trailing)
+                                    .keyboardType(.decimalPad)
+                            }
+                        }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                        
+                        Section {
                             Text("Notes")
                             TextEditor(text: $notes.toUnwrapped(defaultValue: ""))
                                 .frame(minHeight: 50)
@@ -140,6 +186,16 @@ struct SellItemView: View {
                 self.quantityToSell = item.quantity
                 self.priceSoldAt = item.listedPrice
                 self.notes = item.notes
+            }
+            .alert("Platform Fees", isPresented: $showingPlatformFeesInfo) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Platform fees are usually a % taken away from your sale by a service such as eBay or Mercari.")
+            }
+            .alert("Other Fees", isPresented: $showingOtherFeesInfo) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Other fees can be shipping costs or any other cost taken from your profit.")
             }
             .toolbar(content: {
                 Button {

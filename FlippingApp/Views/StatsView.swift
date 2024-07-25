@@ -35,6 +35,10 @@ struct StatsView: View {
                             }
                             
                             Card {
+                                InventoryCardContent()
+                            }
+                            
+                            Card {
                                 TopSellingItemCardContent()
                             }
                             
@@ -137,40 +141,39 @@ fileprivate struct SalesDataCardContent: View {
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
     
-    @AppStorage("timeFilter") private var timeFilter: TimeFilter = .month
+    @AppStorage("salesDataDateFilter") private var salesDataDateFilter: DateFilter = .month
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 Text("Sales Data")
-                    .font(.headline)
+                    .font(.title)
                     .foregroundStyle(.white)
                     .padding(.bottom)
                 
                 Text("Lifetime sales: \(itemController.calculateTotalSoldItems(for: items).formatted())")
-                    .font(.title)
+                    .font(.headline)
                     .foregroundStyle(.white)
                     .padding(.bottom)
                 
                 HStack {
                     Text("View sales by ")
-                        .font(.title)
+                        .font(.headline)
                         .foregroundStyle(.white)
                     
-                    Picker("", selection: $timeFilter) {
-                        ForEach(TimeFilter.allCases, id: \.self) { timeFilter in
-                            Text("\(timeFilter.rawValue)")
-                                .font(.title)
+                    Picker("", selection: $salesDataDateFilter) {
+                        ForEach(DateFilter.allCases, id: \.self) { dateFilter in
+                            Text("\(dateFilter.rawValue)")
                                 .foregroundStyle(.white)
                         }
                     }
                     .pickerStyle(.menu)
-                    .onChange(of: timeFilter) { newTimeFilter in
-                        self.timeFilter = newTimeFilter
+                    .onChange(of: salesDataDateFilter) { newDateFilter in
+                        self.salesDataDateFilter = newDateFilter
                     }
                 }
                 
-                SalesChartView(timeFilter: $timeFilter)
+                SalesChartView(dateFilter: $salesDataDateFilter)
                     .padding(.bottom)
                 
                 Spacer()
@@ -181,39 +184,38 @@ fileprivate struct SalesDataCardContent: View {
         .padding()
     }
     
-    fileprivate enum TimeFilter: String, CaseIterable, Equatable {
-        case week = "Week"
-        case month = "Month"
-    }
-    
     fileprivate struct SalesChartView: View {
         @Query private var items: [Item]
-        @Binding var timeFilter: TimeFilter
+        @Binding var dateFilter: DateFilter
         
         var body: some View {
-            let salesData = salesData(for: timeFilter)
+            let salesData = salesData(for: dateFilter)
             
             if salesData.isEmpty {
                 Text("Sell some items to view this data.")
                     .foregroundStyle(.white)
             } else {
-                Chart(salesData, id: \.date) { data in
-                    BarMark(
-                        x: .value("Date", data.date, unit: timeFilter == .week ? .day : .month),
-                        y: .value("Total Sales", data.totalSales)
-                    )
-                }
-                .chartXAxis {
-                    AxisMarks(values: .stride(by: timeFilter == .week ? .day : .month)) { value in
-                        AxisGridLine()
-                        AxisTick()
-                        AxisValueLabel(format: timeFilter == .week ? .dateTime.day() : .dateTime.month(), centered: true)
+                ScrollView(.horizontal) {
+                    Chart(salesData, id: \.date) { data in
+                        BarMark(
+                            x: .value("Date", data.date, unit: dateFilter == .week ? .day : .month),
+                            y: .value("Total Sales", data.totalSales)
+                        )
+                    }
+                    .frame(width: UIScreen.main.bounds.width)
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: dateFilter == .week ? .day : .month)) { value in
+                            AxisGridLine()
+                            AxisTick()
+                            AxisValueLabel(format: dateFilter == .week ? .dateTime.day() : .dateTime.month(), centered: true)
+                        }
                     }
                 }
+                .defaultScrollAnchor(.trailing)
             }
         }
         
-        private func salesData(for timeFilter: TimeFilter) -> [(date: Date, totalSales: Int)] {
+        private func salesData(for dateFilter: DateFilter) -> [(date: Date, totalSales: Int)] {
             let soldItems = items.filter { $0.soldDate != nil && $0.soldPrice != nil }
             
             let calendar = Calendar.current
@@ -221,7 +223,7 @@ fileprivate struct SalesDataCardContent: View {
             let startDate: Date
             let dateComponent: Calendar.Component
             
-            switch timeFilter {
+            switch dateFilter {
             case .week:
                 startDate = calendar.date(byAdding: .day, value: -7, to: now)!
                 dateComponent = .day
@@ -233,7 +235,7 @@ fileprivate struct SalesDataCardContent: View {
             let filteredItems = soldItems.filter { $0.soldDate! >= startDate }
             
             let groupedData = Dictionary(grouping: filteredItems) { item in
-                if timeFilter == .week {
+                if dateFilter == .week {
                     return calendar.startOfDay(for: item.soldDate!)
                 } else {
                     return calendar.date(from: calendar.dateComponents([.year, .month], from: item.soldDate!))!
@@ -246,6 +248,122 @@ fileprivate struct SalesDataCardContent: View {
             ).map { date in
                 let totalSales = groupedData[date]?.count ?? 0
                 return (date: date, totalSales: totalSales)
+            }
+        }
+    }
+}
+
+fileprivate struct InventoryCardContent: View {
+    @EnvironmentObject private var itemController: ItemController
+    @Query private var items: [Item]
+    
+    @AppStorage("inventoryDataDateFilter") private var inventoryDataDateFilter: DateFilter = .month
+    
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Inventory Data")
+                    .font(.title)
+                    .foregroundStyle(.white)
+                    .padding(.bottom)
+                
+                Text("Inventory Size: \(itemController.calculateTotalInventoryItems(for: items).formatted())")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .padding(.bottom)
+                
+                HStack {
+                    Text("View inventory by ")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    
+                    Picker("", selection: $inventoryDataDateFilter) {
+                        ForEach(DateFilter.allCases, id: \.self) { dateFilter in
+                            Text("\(dateFilter.rawValue)")
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .onChange(of: inventoryDataDateFilter) { newDateFilter in
+                        self.inventoryDataDateFilter = newDateFilter
+                    }
+                }
+                
+                InventoryChartView(dateFilter: $inventoryDataDateFilter)
+                    .padding(.bottom)
+                
+                Spacer()
+            }
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    fileprivate struct InventoryChartView: View {
+        @Query private var items: [Item]
+        @Binding var dateFilter: DateFilter
+        
+        var body: some View {
+            let inventoryData = inventoryData(for: dateFilter)
+            
+            if inventoryData.isEmpty {
+                Text("Add some items to view this data.")
+                    .foregroundStyle(.white)
+            } else {
+                ScrollView(.horizontal) {
+                    Chart(inventoryData, id: \.date) { data in
+                        BarMark(
+                            x: .value("Date", data.date, unit: dateFilter == .week ? .day : .month),
+                            y: .value("Total Items", data.totalItems)
+                        )
+                    }
+                    .frame(width: UIScreen.main.bounds.width)
+                    .chartXAxis {
+                        AxisMarks(values: .stride(by: dateFilter == .week ? .day : .month)) { value in
+                            AxisGridLine()
+                            AxisTick()
+                            AxisValueLabel(format: dateFilter == .week ? .dateTime.day() : .dateTime.month(), centered: true)
+                        }
+                    }
+                }
+                .defaultScrollAnchor(.trailing)
+            }
+        }
+        
+        private func inventoryData(for dateFilter: DateFilter) -> [(date: Date, totalItems: Int)] {
+            let calendar = Calendar.current
+            let now = Date()
+            let endDate = calendar.startOfDay(for: now)
+            var startDate: Date
+            
+            switch dateFilter {
+            case .week:
+                startDate = calendar.date(byAdding: .day, value: -6, to: endDate)!
+            case .month:
+                startDate = calendar.date(byAdding: .month, value: -11, to: endDate)!
+                startDate = calendar.date(from: calendar.dateComponents([.year, .month], from: startDate))!
+            }
+            
+            let dateInterval = DateInterval(start: startDate, end: endDate)
+            
+            let inventoryItems = items.filter { $0.soldDate == nil }
+            
+            let groupedData = Dictionary(grouping: inventoryItems) { item in
+                let itemDate = item.dateAdded ?? item.purchaseDate ?? now
+                if dateFilter == .week {
+                    return calendar.startOfDay(for: itemDate)
+                } else {
+                    return calendar.date(from: calendar.dateComponents([.year, .month], from: itemDate))!
+                }
+            }
+            
+            return calendar.generateDates(
+                inside: dateInterval,
+                matching: dateFilter == .week ? DateComponents(hour: 0, minute: 0, second: 0) : DateComponents(day: 1, hour: 0, minute: 0, second: 0)
+            ).map { date in
+                let itemsOnDate = groupedData[date]?.reduce(0) { $0 + $1.quantity } ?? 0
+                return (date: date, totalItems: itemsOnDate)
             }
         }
     }
@@ -312,18 +430,17 @@ fileprivate struct TopSellingItemCardContent: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Top selling item")
-                        .font(.headline)
+                        .font(.title)
                         .foregroundStyle(.white)
                         .padding(.bottom)
-                    
                     Text("\(topSellingItem.title)")
-                        .font(.title2)
+                        .font(.title3)
                         .foregroundStyle(.white)
                     Text("Total sold: \(totalQuantitySoldForItem(topSellingItem))")
-                        .font(.title3)
+                        .font(.headline)
                         .foregroundStyle(.white)
                     Text("Total profit: \(totalProfitMadeForItem(topSellingItem).formatted(.currency(code: "USD")))")
-                        .font(.title3)
+                        .font(.headline)
                         .foregroundStyle(.white)
                     Spacer()
                 }
@@ -353,19 +470,27 @@ fileprivate struct OldestNewestInfoCardContent: View {
         }
     }
     
+    private func daysSince(_ start: Date) -> Int {
+        let calendar = Calendar.current
+        let startDate = calendar.startOfDay(for: start)
+        let endDate = calendar.startOfDay(for: .now)
+        let components = calendar.dateComponents([.day], from: startDate, to: endDate)
+        return components.day ?? 0
+    }
+    
     var body: some View {
         if recentlyListedItem != nil || oldestItem != nil {
             HStack {
                 VStack(alignment: .leading) {
                     if let recentlyListedItem {
                         Text("Recently Added")
-                            .font(.headline)
+                            .font(.title)
                             .foregroundStyle(.white)
                         Text("\(recentlyListedItem.title)")
                             .font(.title3)
                             .foregroundStyle(.white)
                         Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: "USD")))")
-                            .font(.title3)
+                            .font(.headline)
                             .foregroundStyle(.white)
                             .padding(.bottom)
                     }
@@ -374,14 +499,19 @@ fileprivate struct OldestNewestInfoCardContent: View {
                     
                     if let oldestItem {
                         Text("Oldest Item")
-                            .font(.headline)
+                            .font(.title)
                             .foregroundStyle(.white)
                         Text("\(oldestItem.title)")
                             .font(.title3)
                             .foregroundStyle(.white)
                         Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: "USD")))")
-                            .font(.title3)
+                            .font(.headline)
                             .foregroundStyle(.white)
+                        if let purchaseDate = oldestItem.purchaseDate {
+                            Text("Purchased: \(daysSince(purchaseDate).formatted()) days ago")
+                                .font(.headline)
+                                .foregroundStyle(.white)
+                        }
                     }
                 }
                 
@@ -390,4 +520,9 @@ fileprivate struct OldestNewestInfoCardContent: View {
             .padding()
         }
     }
+}
+
+fileprivate enum DateFilter: String, CaseIterable, Equatable {
+    case week = "Week"
+    case month = "Month"
 }
