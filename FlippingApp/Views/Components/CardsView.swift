@@ -12,7 +12,6 @@ enum CardType: CaseIterable {
     case profit
     case value
     case sales
-    case otherInfo
 }
 
 struct CardsView: View {
@@ -38,8 +37,6 @@ struct CardView: View {
             return Theme.CardsView.Card.ValueCardHeight
         case .sales:
             return Theme.CardsView.Card.SalesCardHeight
-        case .otherInfo:
-            return Theme.CardsView.Card.OtherInfoCardHeight
         }
     }
 
@@ -58,8 +55,6 @@ struct CardView: View {
                             TotalValueCardContent()
                         case .sales:
                             SoldItemsCardContent()
-                        case .otherInfo:
-                            OtherInfoCardContent()
                         }
                     }
                 )
@@ -160,7 +155,7 @@ struct SoldItemsCardContent: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("Total Sales")
+                Text("Sales to Date")
                     .font(.headline)
                     .foregroundStyle(.white)
                 Text("\(totalSales)")
@@ -174,50 +169,6 @@ struct SoldItemsCardContent: View {
                     .foregroundStyle(.white)
                 Text("\(totalSoldItemValue.formatted(.currency(code: "USD")))")
                     .font(.title)
-                    .foregroundStyle(.white)
-            }
-            Spacer()
-        }
-        .padding()
-    }
-}
-
-struct OtherInfoCardContent: View {
-    @Query private var items: [Item]
-
-    private var recentlyListedItemTitle: String {
-        if let mostRecentItem = items.max(by: { ($0.purchaseDate ?? Date.distantPast) < ($1.purchaseDate ?? Date.distantPast) }) {
-            return mostRecentItem.title
-        } else {
-            return "Add an item"
-        }
-    }
-
-    private var oldestItemTitle: String {
-        if let oldestItem = items.min(by: { $0.purchaseDate ?? Date() < $1.purchaseDate ?? Date() }) {
-            return oldestItem.title
-        } else {
-            return "Add an item"
-        }
-    }
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text("Recently Added")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Text("\(recentlyListedItemTitle)")
-                    .font(.title3)
-                    .foregroundStyle(.white)
-
-                Spacer()
-
-                Text("Oldest Item")
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                Text("\(oldestItemTitle)")
-                    .font(.title3)
                     .foregroundStyle(.white)
             }
             Spacer()
