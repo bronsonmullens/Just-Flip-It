@@ -13,8 +13,6 @@ import RevenueCat
 @main
 struct Just_Flip_It_App: App {
     @StateObject private var itemController: ItemController
-
-    public let log = OSLog(subsystem: "com.bronsonmullens.Just-Flip-It", category: "game")
     var modelContainer: ModelContainer
 
     init() {
