@@ -150,23 +150,23 @@ fileprivate struct SalesDataCardContent: View {
             VStack(alignment: .leading) {
                 Text("Sales Data")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
                 
                 Text("Lifetime sales: \(itemController.calculateTotalSoldItems(for: items).formatted())")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
                 
                 HStack {
                     Text("View sales by ")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     
                     Picker("", selection: $salesDataDateFilter) {
                         ForEach(DateFilter.allCases, id: \.self) { dateFilter in
                             Text("\(dateFilter.rawValue)")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         }
                     }
                     .pickerStyle(.menu)
@@ -187,6 +187,7 @@ fileprivate struct SalesDataCardContent: View {
     }
     
     fileprivate struct SalesChartView: View {
+        @EnvironmentObject private var itemController: ItemController
         @Query private var items: [Item]
         @Binding var dateFilter: DateFilter
         
@@ -195,7 +196,7 @@ fileprivate struct SalesDataCardContent: View {
             
             if salesData.isEmpty {
                 Text("Sell some items to view this data.")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             } else {
                 ScrollView(.horizontal) {
                     Chart(salesData, id: \.date) { data in
@@ -268,23 +269,23 @@ fileprivate struct InventoryCardContent: View {
             VStack(alignment: .leading) {
                 Text("Inventory Data")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
                 
                 Text("Inventory Size: \(itemController.calculateTotalInventoryItems(for: items).formatted())")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
                 
                 HStack {
                     Text("View inventory by ")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     
                     Picker("", selection: $inventoryDataDateFilter) {
                         ForEach(DateFilter.allCases, id: \.self) { dateFilter in
                             Text("\(dateFilter.rawValue)")
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         }
                     }
                     .pickerStyle(.menu)
@@ -305,6 +306,7 @@ fileprivate struct InventoryCardContent: View {
     }
     
     fileprivate struct InventoryChartView: View {
+        @EnvironmentObject private var itemController: ItemController
         @Query private var items: [Item]
         @Binding var dateFilter: DateFilter
         
@@ -313,7 +315,7 @@ fileprivate struct InventoryCardContent: View {
             
             if inventoryData.isEmpty {
                 Text("Add some items to view this data.")
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             } else {
                 ScrollView(.horizontal) {
                     Chart(inventoryData, id: \.date) { data in
@@ -437,17 +439,17 @@ fileprivate struct TopSellingItemCardContent: View {
                 VStack(alignment: .leading) {
                     Text("Top selling item")
                         .font(.title)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         .padding(.bottom)
                     Text("\(topSellingItem.title)")
                         .font(.title3)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     Text("Total sold: \(totalQuantitySoldForItem(topSellingItem))")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     Text("Total profit: \(totalProfitMadeForItem(topSellingItem).formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                         .font(.headline)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     Spacer()
                 }
                 Spacer()
@@ -460,6 +462,7 @@ fileprivate struct TopSellingItemCardContent: View {
 // MARK: - Oldest-Newest Info Card Content
 
 fileprivate struct OldestNewestInfoCardContent: View {
+    @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
     
     private var inventoryItems: [Item] {
@@ -497,13 +500,13 @@ fileprivate struct OldestNewestInfoCardContent: View {
                     if let recentlyListedItem {
                         Text("Recently Added")
                             .font(.title)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("\(recentlyListedItem.title)")
                             .font(.title3)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             .padding(.bottom)
                     }
                     
@@ -512,17 +515,17 @@ fileprivate struct OldestNewestInfoCardContent: View {
                     if let oldestItem {
                         Text("Oldest Item")
                             .font(.title)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("\(oldestItem.title)")
                             .font(.title3)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         if let purchaseDate = oldestItem.purchaseDate {
                             Text("Purchased: \(daysSince(purchaseDate).formatted()) days ago")
                                 .font(.headline)
-                                .foregroundStyle(.white)
+                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         }
                     }
                 }

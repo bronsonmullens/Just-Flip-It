@@ -46,11 +46,11 @@ fileprivate struct ProfitCardContent: View {
             VStack(alignment: .leading) {
                 Text("Net Profit")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Spacer()
                 Text("\(profit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.largeTitle)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
             Spacer()
         }
@@ -81,19 +81,19 @@ fileprivate struct TotalValueCardContent: View {
             VStack(alignment: .leading) {
                 Text("Current Inventory Value")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("\(totalValue.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
 
                 Spacer()
 
                 Text("Current Investment")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("\(totalInvestment.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
 
             Spacer()
@@ -102,10 +102,10 @@ fileprivate struct TotalValueCardContent: View {
                 Spacer()
                 Text("Item Count")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("\(inventoryCount)")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
         }
         .padding()
@@ -131,19 +131,19 @@ fileprivate struct SoldItemsCardContent: View {
             VStack(alignment: .leading) {
                 Text("Sales to Date")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("\(totalSales)")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
 
                 Spacer()
 
                 Text("Total Sold Value")
                     .font(.headline)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 Text("\(totalSoldItemValue.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             }
             Spacer()
         }

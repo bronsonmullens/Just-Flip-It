@@ -111,7 +111,7 @@ struct SellItemView: View {
                                 Text("Net Profit:")
                                 Spacer()
                                 Text("\(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             }
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))

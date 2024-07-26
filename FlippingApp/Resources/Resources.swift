@@ -72,7 +72,7 @@ enum ColorTheme: String, CaseIterable, Equatable {
     case sunrise
     case stonks
     case monochrome
-    case pastel
+    case flamingo
 }
 
 enum DeleteType: String {

@@ -341,6 +341,7 @@ struct WhatsNewView: View {
                 Text("- Automated migration for old item data")
                 Text("- Various bug fixes")
             }
+            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             .padding()
         }
     }

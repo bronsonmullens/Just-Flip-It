@@ -196,7 +196,7 @@ fileprivate struct InventoryRow: View {
                             Text(tag.title)
                         }
                         Text("Profit: \(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     }
                 }
                 
@@ -257,7 +257,7 @@ fileprivate struct InventoryGrid: View {
                         Text("\(item.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))) per unit")
                             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                         Text("Profit: \(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     }
                 }
             }
