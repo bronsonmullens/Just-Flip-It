@@ -1,11 +1,13 @@
 //
-//  Extensions.swift
+//  Resources.swift
 //  FlippingApp
 //
 //  Created by Bronson Mullens on 9/29/23.
 //
 
 import SwiftUI
+
+// MARK: - Extensions
 
 extension Binding {
     func toUnwrapped<T>(defaultValue: T) -> Binding<T> where Value == Optional<T>  {
@@ -59,4 +61,35 @@ extension Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
     }
+}
+
+// MARK: - Enums
+
+enum ColorTheme: String, CaseIterable, Equatable {
+    case standard
+    case minty
+    case lavender
+    case sunrise
+    case stonks
+    case monochrome
+    case pastel
+}
+
+enum DeleteType: String {
+    case inventory = "Inventory"
+    case soldItems = "Sold Items"
+    case tags = "Tags"
+    case everything = "Everything"
+    case error = "Error"
+}
+
+enum InputError: String {
+    case invalidQuantity = "Quantity must be between at least 1."
+    case invalidPurchasePrice = "Purchase price must be at least $0."
+    case invalidListedPrice = "Listed price must be at least $0."
+}
+
+enum SearchMode {
+    case inventory
+    case receipts
 }

@@ -445,7 +445,7 @@ fileprivate struct TopSellingItemCardContent: View {
                     Text("Total sold: \(totalQuantitySoldForItem(topSellingItem))")
                         .font(.headline)
                         .foregroundStyle(.white)
-                    Text("Total profit: \(totalProfitMadeForItem(topSellingItem).formatted(.currency(code: "USD")))")
+                    Text("Total profit: \(totalProfitMadeForItem(topSellingItem).formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                         .font(.headline)
                         .foregroundStyle(.white)
                     Spacer()
@@ -462,8 +462,12 @@ fileprivate struct TopSellingItemCardContent: View {
 fileprivate struct OldestNewestInfoCardContent: View {
     @Query private var items: [Item]
     
+    private var inventoryItems: [Item] {
+        return items.filter({ $0.soldPrice == nil })
+    }
+    
     private var recentlyListedItem: Item? {
-        if let mostRecentItem = items.max(by: { ($0.purchaseDate ?? Date.distantPast) < ($1.purchaseDate ?? Date.distantPast) }) {
+        if let mostRecentItem = inventoryItems.max(by: { ($0.purchaseDate ?? Date.distantPast) < ($1.purchaseDate ?? Date.distantPast) }) {
             return mostRecentItem
         } else {
             return nil
@@ -471,7 +475,7 @@ fileprivate struct OldestNewestInfoCardContent: View {
     }
     
     private var oldestItem: Item? {
-        if let oldestItem = items.min(by: { $0.purchaseDate ?? Date() < $1.purchaseDate ?? Date() }) {
+        if let oldestItem = inventoryItems.min(by: { $0.purchaseDate ?? Date() < $1.purchaseDate ?? Date() }) {
             return oldestItem
         } else {
             return nil
@@ -497,7 +501,7 @@ fileprivate struct OldestNewestInfoCardContent: View {
                         Text("\(recentlyListedItem.title)")
                             .font(.title3)
                             .foregroundStyle(.white)
-                        Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: "USD")))")
+                        Text("Listed: \(recentlyListedItem.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .font(.headline)
                             .foregroundStyle(.white)
                             .padding(.bottom)
@@ -512,7 +516,7 @@ fileprivate struct OldestNewestInfoCardContent: View {
                         Text("\(oldestItem.title)")
                             .font(.title3)
                             .foregroundStyle(.white)
-                        Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: "USD")))")
+                        Text("Listed: \(oldestItem.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .font(.headline)
                             .foregroundStyle(.white)
                         if let purchaseDate = oldestItem.purchaseDate {

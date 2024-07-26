@@ -25,7 +25,7 @@ class Item: Identifiable {
     // Sold Item Properties
     var soldDate: Date?
     var platformFees: Double?
-    var otherFees: Double?
+    var otherFees: Double? // Percentage
     var soldPrice: Double?
 
     init(title: String, id: String = UUID().uuidString, imageData: Data?, quantity: Int, purchaseDate: Date?, purchasePrice: Double, listedPrice: Double, tag: Tag? = nil, notes: String?, soldDate: Date? = nil, platformFees: Double? = nil, otherFees: Double? = nil, soldPrice: Double? = nil) {

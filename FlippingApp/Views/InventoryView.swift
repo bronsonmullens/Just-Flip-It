@@ -14,11 +14,6 @@ fileprivate enum ViewMode: String, CaseIterable, Equatable {
     case grid = "Grid View"
 }
 
-enum SearchMode {
-    case inventory
-    case receipts
-}
-
 struct InventoryView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
@@ -200,7 +195,7 @@ fileprivate struct InventoryRow: View {
                         if let tag = item.tag {
                             Text(tag.title)
                         }
-                        Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
+                        Text("Profit: \(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .foregroundStyle(.white)
                     }
                 }
@@ -208,9 +203,9 @@ fileprivate struct InventoryRow: View {
                 Spacer()
                 
                 if let soldPrice = item.soldPrice {
-                    Text("\(soldPrice.formatted(.currency(code: "USD")))")
+                    Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                 } else {
-                    Text("\(item.listedPrice.formatted(.currency(code: "USD"))) per unit")
+                    Text("\(item.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))) per unit")
                 }
             }
         }
@@ -255,13 +250,13 @@ fileprivate struct InventoryGrid: View {
                     .font(.caption)
                     .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 if let soldPrice = item.soldPrice {
-                    Text("\(soldPrice.formatted(.currency(code: "USD")))")
+                    Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 } else {
                     VStack {
-                        Text("\(item.listedPrice.formatted(.currency(code: "USD"))) per unit")
+                        Text("\(item.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))) per unit")
                             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                        Text("Profit: \(estimatedProfit.formatted(.currency(code: "USD")))")
+                        Text("Profit: \(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             .foregroundStyle(.white)
                     }
                 }

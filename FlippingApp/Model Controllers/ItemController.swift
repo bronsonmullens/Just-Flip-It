@@ -284,11 +284,3 @@ class ItemController: ObservableObject {
         UserDefaults.standard.setValue(true, forKey: "dataWasMigrated")
     }
 }
-
-enum DeleteType: String {
-    case inventory = "Inventory"
-    case soldItems = "Sold Items"
-    case tags = "Tags"
-    case everything = "Everything"
-    case error = "Error"
-}

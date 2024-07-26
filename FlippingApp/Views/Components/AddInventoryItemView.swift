@@ -29,6 +29,7 @@ struct AddInventoryItemView: View {
     @State private var inputError: InputError?
     @State private var presentingTagPicker: Bool = false
     @State private var purchaseDatePickerShown: Bool = false
+    @State private var showingTagInfoAlert: Bool = false
     
     private func validateInputData() -> Bool {
         guard let quantity = quantity,
@@ -166,9 +167,9 @@ struct AddInventoryItemView: View {
                     
                     Section {
                         HStack {
-                            Text("Cost per item")
+                            Text("Your cost per item")
                             Spacer()
-                            TextField("", value: $purchasePrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
+                            TextField("", value: $purchasePrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
@@ -208,7 +209,7 @@ struct AddInventoryItemView: View {
                         HStack {
                             Text("Price per item")
                             Spacer()
-                            TextField("", value: $listedPrice, format: .currency(code: "USD"), prompt: Text("$0.00"))
+                            TextField("", value: $listedPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
                         }
@@ -217,19 +218,24 @@ struct AddInventoryItemView: View {
                     
                     Section {
                         HStack {
-                            Text("Add a tag?")
+                            HStack {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 20)
+                                    .onTapGesture {
+                                        self.showingTagInfoAlert.toggle()
+                                    }
+                                
+                                Text("Add a tag?")
+                            }
                             
                             Spacer()
                             
-                            Button {
-                                self.presentingTagPicker.toggle()
-                            } label: {
-                                if let tag = tag {
-                                    Text(tag.title)
-                                } else {
-                                    Text("Tap here")
+                            Text("\(tag?.title ?? "Tap here")")
+                                .onTapGesture {
+                                    self.presentingTagPicker.toggle()
                                 }
-                            }
                         }
                         
                         VStack(alignment: .leading) {
@@ -245,18 +251,15 @@ struct AddInventoryItemView: View {
                 .frame(height: UIScreen.main.bounds.height)
                 .ignoresSafeArea(edges: .bottom)
             }
+            .alert("Tags", isPresented: $showingTagInfoAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Tags are like categories for your items. Create as many as you'd like to organize your items however you like.")
+            }
             .popover(isPresented: $presentingTagPicker, content: {
                 TagView(isPresented: $presentingTagPicker, tag: $tag)
             })
         }
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
     }
-}
-
-// MARK: - Errors
-
-enum InputError: String {
-    case invalidQuantity = "Quantity must be between at least 1."
-    case invalidPurchasePrice = "Purchase price must be at least $0."
-    case invalidListedPrice = "Listed price must be at least $0."
 }

@@ -23,7 +23,7 @@
 		E3079DAA2AC7791B003D6CE7 /* CardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DA92AC7791B003D6CE7 /* CardsView.swift */; };
 		E3079DAC2AC77E8A003D6CE7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E3079DAB2AC77E8A003D6CE7 /* LaunchScreen.storyboard */; };
 		E3079DB02AC77F77003D6CE7 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DAF2AC77F77003D6CE7 /* TagView.swift */; };
-		E3079DB42AC77FF1003D6CE7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB32AC77FF1003D6CE7 /* Extensions.swift */; };
+		E3079DB42AC77FF1003D6CE7 /* Resources.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB32AC77FF1003D6CE7 /* Resources.swift */; };
 		E3079DB62AC7801A003D6CE7 /* ReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */; };
 		E3079DBA2AC78107003D6CE7 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DB92AC78107003D6CE7 /* StatsView.swift */; };
 		E3079DBC2AC7811C003D6CE7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */; };
@@ -53,7 +53,7 @@
 		E3079DA92AC7791B003D6CE7 /* CardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardsView.swift; sourceTree = "<group>"; };
 		E3079DAB2AC77E8A003D6CE7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E3079DAF2AC77F77003D6CE7 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
-		E3079DB32AC77FF1003D6CE7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E3079DB32AC77FF1003D6CE7 /* Resources.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resources.swift; sourceTree = "<group>"; };
 		E3079DB52AC7801A003D6CE7 /* ReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptView.swift; sourceTree = "<group>"; };
 		E3079DB92AC78107003D6CE7 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		E3079DBB2AC7811C003D6CE7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 			children = (
 				E3B2BF4B25D675020026DBB9 /* Info.plist */,
 				E3079DA02AC77665003D6CE7 /* CustomLogger.swift */,
-				E3079DB32AC77FF1003D6CE7 /* Extensions.swift */,
+				E3079DB32AC77FF1003D6CE7 /* Resources.swift */,
 				E3079DAB2AC77E8A003D6CE7 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
@@ -268,7 +268,7 @@
 				E3079DB02AC77F77003D6CE7 /* TagView.swift in Sources */,
 				E3079D952AC774E4003D6CE7 /* Item.swift in Sources */,
 				E3079D9D2AC775C3003D6CE7 /* MainView.swift in Sources */,
-				E3079DB42AC77FF1003D6CE7 /* Extensions.swift in Sources */,
+				E3079DB42AC77FF1003D6CE7 /* Resources.swift in Sources */,
 				E3079D9F2AC77642003D6CE7 /* ItemController.swift in Sources */,
 				E3079DA32AC776AC003D6CE7 /* OldItem.swift in Sources */,
 				2C4E52EF2BE73BD1000A4BB2 /* InventoryView.swift in Sources */,

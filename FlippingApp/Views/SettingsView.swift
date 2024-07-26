@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import StoreKit
 import MessageUI
 import WebKit
@@ -13,6 +14,7 @@ import RevenueCat
 
 struct SettingsView: View {
     @EnvironmentObject private var itemController: ItemController
+    @Query private var items: [Item]
     
     @State private var showingWhatsNewInfo: Bool = false
     @State private var showingMailView: Bool = false
@@ -60,14 +62,69 @@ struct SettingsView: View {
         }
     }
     
-    private func generateCSV() -> URL {
-        return URL(string: "www.google.com")!
+    // MARK: - CSV Support
+    
+    private func generateCSVForInventory() -> URL {
+        var fileURL: URL!
+        
+        let inventoryItems = items.filter { $0.soldPrice == nil }
+        
+        let heading = "Item, Quantity, Purchase Date, Purchase Price, Listed Price, Tag, Notes\n"
+        let rows = inventoryItems.map {"\($0.title), \($0.quantity.formatted()), \($0.purchaseDate?.formatted(date: .numeric, time: .omitted) ?? ""), \($0.purchasePrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))), \($0.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))), \($0.tag?.title ?? ""), \($0.notes ?? "")" }
+        
+        let stringData = heading + rows.joined(separator: "\n")
+        
+        do {
+            let path = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .allDomainsMask,
+                appropriateFor: nil,
+                create: false)
+            
+            fileURL = path.appendingPathComponent("Inventory-Items.csv")
+            
+            try stringData.write(to: fileURL, atomically: true, encoding: .utf8)
+            log.info("Wrote string data to \(fileURL)")
+        } catch {
+            log.error("Could not export CSV: \(error)")
+        }
+        
+        return fileURL
+    }
+    
+    private func generateCSVForSoldItems() -> URL {
+        var fileURL: URL!
+        
+        let soldItems = items.filter { $0.soldPrice != nil }
+        
+        let heading = "Item, Quantity, Purchase Date, Purchase Price, Listed Price, Tag, Notes, Sold Date, Sold Price, Platform Fees, Other Fees\n"
+        let rows = soldItems.map {"\($0.title), \($0.quantity.formatted()), \($0.purchaseDate?.formatted(date: .numeric, time: .omitted) ?? ""), \($0.purchasePrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))), \($0.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))), \($0.tag?.title ?? ""), \($0.notes ?? ""), \($0.soldDate?.formatted(date: .numeric, time: .omitted) ?? ""), \($0.soldPrice?.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")) ?? ""), \($0.platformFees?.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")) ?? ""), \($0.otherFees?.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")) ?? "")" }
+        
+        let stringData = heading + rows.joined(separator: "\n")
+        
+        do {
+            let path = try FileManager.default.url(
+                for: .documentDirectory,
+                in: .allDomainsMask,
+                appropriateFor: nil,
+                create: false)
+            
+            fileURL = path.appendingPathComponent("Sold-Items.csv")
+            
+            try stringData.write(to: fileURL, atomically: true, encoding: .utf8)
+            log.info("Wrote string data to \(fileURL)")
+        } catch {
+            log.error("Could not export CSV: \(error)")
+        }
+        
+        return fileURL
     }
     
     var body: some View {
         Form {
             Section {
                 Text("👨🏼‍💻 App Version: \(appVersion ?? "Unknown")")
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 
                 Button(action: {
                     self.showingWhatsNewInfo.toggle()
@@ -110,13 +167,13 @@ struct SettingsView: View {
                     .disabled(itemController.hasPremium == false)
                 }
                 
-                ShareLink(item: generateCSV()) {
+                ShareLink(item: generateCSVForInventory()) {
                     Text("📄 Export Inventory")
                         .foregroundStyle(itemController.hasPremium ? Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
                 }
                 .disabled(itemController.hasPremium == false)
                 
-                ShareLink(item: generateCSV()) {
+                ShareLink(item: generateCSVForSoldItems()) {
                     Text("📄 Export Sales")
                         .foregroundStyle(itemController.hasPremium ? Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
                 }
@@ -262,7 +319,7 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Supporting Sheet Views
+// MARK: - What's New
 
 struct WhatsNewView: View {
     @EnvironmentObject private var itemController: ItemController
@@ -344,10 +401,10 @@ struct TipJarView: View {
     }
 }
 
+// MARK: - Subscribe Page
+
 struct SubscribePage: View {
     @EnvironmentObject private var itemController: ItemController
-    
-    @State private var showingWhatsIncluded: Bool = false
     
     @Binding var currentOffering: Offering?
     @Binding var isPresented: Bool
@@ -465,58 +522,10 @@ struct SubscribePage: View {
             }
             .padding()
         }
-        
-        //        ZStack {
-        //            Color("\(itemController.selectedTheme.rawValue)Background")
-        //                .ignoresSafeArea(.all)
-        //
-        //            VStack {
-        //                Text("✨ Premium ✨")
-        //                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                    .font(.title2)
-        //                    .padding(.top)
-        //                Text("Thank you for supporting me ❤️")
-        //                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                    .font(.headline)
-        //                    .padding(.bottom)
-        //
-        //                SubscriptionStoreView(productIDs: ["justflipit.subscription.general"])
-        //                    .storeButton(.visible, for: .restorePurchases, .redeemCode)
-        //                    .subscriptionStoreButtonLabel(.price)
-        //                    .tint(.accentColor)
-        //
-        //                VStack(alignment: .leading) {
-        //                    if showingWhatsIncluded {
-        //                        VStack(alignment: .center) {
-        //                            Text("⭐️ Attach images to items ⭐️")
-        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                            Text("⭐️ Store item locations ⭐️")
-        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                            Text("⭐️ See detailed stats ⭐️")
-        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                            Text("⭐️ Try out new themes ⭐️")
-        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                        }
-        //                        .font(.headline)
-        //                        .foregroundStyle(.cyan)
-        //                        .transition(.move(edge: .bottom))
-        //                    } else {
-        //                        Button(action: {
-        //                            withAnimation {
-        //                                self.showingWhatsIncluded = true
-        //                            }
-        //                        }, label: {
-        //                            Text("What's Included?")
-        //                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-        //                                .font(.title3)
-        //                        })
-        //                    }
-        //                }
-        //            }
-        //            .padding()
-        //        }
     }
 }
+
+// MARK: - Privacy Policy
 
 struct PrivacyPolicyPage: View {
     @EnvironmentObject private var itemController: ItemController
@@ -553,14 +562,4 @@ struct PrivacyPolicyPage: View {
             .padding()
         }
     }
-}
-
-enum ColorTheme: String, CaseIterable, Equatable {
-    case standard
-    case minty
-    case lavender
-    case sunrise
-    case stonks
-    case monochrome
-    case pastel
 }

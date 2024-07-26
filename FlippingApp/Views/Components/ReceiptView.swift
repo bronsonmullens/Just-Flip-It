@@ -77,7 +77,7 @@ struct ReceiptView: View {
                                 HStack {
                                     Text("Purchase Price")
 
-                                    TextField("", value: $item.purchasePrice, format: .currency(code: "USD"))
+                                    TextField("", value: $item.purchasePrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
                                 }
@@ -85,30 +85,30 @@ struct ReceiptView: View {
                                 HStack {
                                     Text("Listed Price")
 
-                                    TextField("", value: $item.listedPrice, format: .currency(code: "USD"))
+                                    TextField("", value: $item.listedPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
                                 }
 
                                 HStack {
-                                    Text("Sold Price")
+                                    Text("Final Sale Price")
 
-                                    TextField("", value: $item.soldPrice, format: .currency(code: "USD"))
+                                    TextField("", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.numberPad)
                                 }
                             } else {
                                 LabeledContent("Purchase Price") {
-                                    Text("\(item.purchasePrice.formatted(.currency(code: "USD")))")
+                                    Text("\(item.purchasePrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                 }
 
                                 LabeledContent("Listed Price") {
-                                    Text("\(item.listedPrice.formatted(.currency(code: "USD")))")
+                                    Text("\(item.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                 }
 
                                 if let soldPrice = item.soldPrice {
-                                    LabeledContent("Sold Price") {
-                                        Text("\(soldPrice.formatted(.currency(code: "USD")))")
+                                    LabeledContent("Final Sale Price") {
+                                        Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                     }
                                 }
                             }
@@ -149,7 +149,7 @@ struct ReceiptView: View {
                                 HStack {
                                     Text("Platform Fees")
 
-                                    TextField("", value: $item.platformFees, format: .currency(code: "USD"))
+                                    TextField("%", value: $item.platformFees, format: .percent)
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
                                 }
@@ -157,20 +157,21 @@ struct ReceiptView: View {
                                 HStack {
                                     Text("Other Fees")
 
-                                    TextField("", value: $item.otherFees, format: .currency(code: "USD"))
+                                    TextField("", value: $item.otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
                                 }
                             } else {
-                                if let platformFees = item.platformFees {
+                                if let platformFees = item.platformFees, let soldPrice = item.soldPrice {
+                                    let fee = soldPrice * platformFees
                                     LabeledContent("Platform Fees") {
-                                        Text("\(platformFees.formatted(.currency(code: "USD")))")
+                                        Text("\(fee.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                     }
                                 }
 
                                 if let otherFees = item.otherFees {
                                     LabeledContent("Other Fees") {
-                                        Text("\(otherFees.formatted(.currency(code: "USD")))")
+                                        Text("\(otherFees.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                     }
                                 }
                             }
@@ -180,7 +181,7 @@ struct ReceiptView: View {
                         if editMode == false {
                             Section {
                                 LabeledContent("Profit") {
-                                    Text("\(itemController.calculateProfitForItem(item, quantity: item.quantity).formatted(.currency(code: "USD")))")
+                                    Text("\(itemController.calculateProfitForItem(item, quantity: item.quantity).formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                         .bold()
                                 }
                             }

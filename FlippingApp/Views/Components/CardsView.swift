@@ -48,7 +48,7 @@ fileprivate struct ProfitCardContent: View {
                     .font(.headline)
                     .foregroundStyle(.white)
                 Spacer()
-                Text("\(profit.formatted(.currency(code: "USD")))")
+                Text("\(profit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.largeTitle)
                     .foregroundStyle(.white)
             }
@@ -82,7 +82,7 @@ fileprivate struct TotalValueCardContent: View {
                 Text("Current Inventory Value")
                     .font(.headline)
                     .foregroundStyle(.white)
-                Text("\(totalValue.formatted(.currency(code: "USD")))")
+                Text("\(totalValue.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
                     .foregroundStyle(.white)
 
@@ -91,7 +91,7 @@ fileprivate struct TotalValueCardContent: View {
                 Text("Current Investment")
                     .font(.headline)
                     .foregroundStyle(.white)
-                Text("\(totalInvestment.formatted(.currency(code: "USD")))")
+                Text("\(totalInvestment.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
                     .foregroundStyle(.white)
             }
@@ -141,7 +141,7 @@ fileprivate struct SoldItemsCardContent: View {
                 Text("Total Sold Value")
                     .font(.headline)
                     .foregroundStyle(.white)
-                Text("\(totalSoldItemValue.formatted(.currency(code: "USD")))")
+                Text("\(totalSoldItemValue.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                     .font(.title)
                     .foregroundStyle(.white)
             }

@@ -96,13 +96,13 @@ struct SellItemView: View {
                         Section {
                             HStack {
                                 Text("Purchase Price:")
-                                Text("\(item.purchasePrice.formatted(.currency(code: "USD")))")
+                                Text("\(item.purchasePrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                             }
                             .foregroundStyle(.gray)
                             
                             HStack {
-                                Text("Sold Price:")
-                                TextField("$0.00", value: $priceSoldAt, format: .currency(code: "USD"))
+                                Text("Finale Sale Price:")
+                                TextField("$0.00", value: $priceSoldAt, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
                             }
@@ -110,7 +110,7 @@ struct SellItemView: View {
                             HStack {
                                 Text("Net Profit:")
                                 Spacer()
-                                Text("\(estimatedProfit.formatted(.currency(code: "USD")))")
+                                Text("\(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                     .foregroundStyle(.white)
                             }
                         }
@@ -138,21 +138,25 @@ struct SellItemView: View {
                         Section {
                             HStack {
                                 HStack {
-                                    Button {
-                                        self.showingPlatformFeesInfo.toggle()
-                                    } label: {
-                                        Image(systemName: "info.circle")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 20)
-                                    }
+                                    Image(systemName: "info.circle")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20)
                                     
                                     Text("Platform Fees:")
+                                }
+                                .onTapGesture {
+                                    self.showingPlatformFeesInfo.toggle()
                                 }
                                 
                                 TextField("%", value: $platformFees, format: .percent)
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
+                            }
+                            
+                            if platformFees != 0.0 {
+                                Text((priceSoldAt * platformFees), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                    .foregroundStyle(.gray)
                             }
                             
                             HStack {
@@ -169,7 +173,7 @@ struct SellItemView: View {
                                     Text("Other Fees:")
                                 }
                                 
-                                TextField("$0.00", value: $otherFees, format: .currency(code: "USD"))
+                                TextField("$0.00", value: $otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
                             }
