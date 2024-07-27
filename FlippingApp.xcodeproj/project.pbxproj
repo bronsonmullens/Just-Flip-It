@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		2C4E52ED2BE49FC7000A4BB2 /* MailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E52EC2BE49FC7000A4BB2 /* MailView.swift */; };
 		2C4E52EF2BE73BD1000A4BB2 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C4E52EE2BE73BD1000A4BB2 /* InventoryView.swift */; };
-		2CA207682C517D4400141B55 /* Just Flip It!.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 2CA207672C517D4400141B55 /* Just Flip It!.storekit */; };
 		2CA581652BEDE97500DA1A22 /* AddInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */; };
 		2CA581672BF000CA00DA1A22 /* EditInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */; };
 		E3079D952AC774E4003D6CE7 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3079D942AC774E4003D6CE7 /* Item.swift */; };
@@ -38,7 +37,6 @@
 /* Begin PBXFileReference section */
 		2C4E52EC2BE49FC7000A4BB2 /* MailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MailView.swift; sourceTree = "<group>"; };
 		2C4E52EE2BE73BD1000A4BB2 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
-		2CA207672C517D4400141B55 /* Just Flip It!.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; name = "Just Flip It!.storekit"; path = "FlippingApp/Just Flip It!.storekit"; sourceTree = SOURCE_ROOT; };
 		2CA581642BEDE97500DA1A22 /* AddInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryItemView.swift; sourceTree = "<group>"; };
 		2CA581662BF000CA00DA1A22 /* EditInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryItemView.swift; sourceTree = "<group>"; };
 		E3079D932AC77323003D6CE7 /* FlippingApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FlippingApp.entitlements; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 		E3B2BF3C25D675010026DBB9 /* FlippingApp */ = {
 			isa = PBXGroup;
 			children = (
-				2CA207672C517D4400141B55 /* Just Flip It!.storekit */,
 				E3079D932AC77323003D6CE7 /* FlippingApp.entitlements */,
 				E3B2BF4625D675020026DBB9 /* Assets.xcassets */,
 				E3079D982AC7754D003D6CE7 /* Just_Flip_ItApp.swift */,
@@ -243,7 +240,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E3B2BF4725D675020026DBB9 /* Assets.xcassets in Resources */,
-				2CA207682C517D4400141B55 /* Just Flip It!.storekit in Resources */,
 				E3079DAC2AC77E8A003D6CE7 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

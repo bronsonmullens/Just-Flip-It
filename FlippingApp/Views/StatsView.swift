@@ -86,7 +86,7 @@ struct StatsView: View {
                         Button {
                             Purchases.shared.restorePurchases { customerInfo, error in
                                 
-                                if customerInfo?.entitlements.all["Pro"]?.isActive == true {
+                                if customerInfo?.entitlements.all["Premium"]?.isActive == true {
                                     log.info("Restoring premium access to user.")
                                     itemController.hasPremium = true
                                 }

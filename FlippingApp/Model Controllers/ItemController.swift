@@ -16,7 +16,7 @@ class ItemController: ObservableObject {
         migrateData()
         
         Purchases.shared.getCustomerInfo { customerInfo, error in
-            self.hasPremium = customerInfo?.entitlements.all["Pro"]?.isActive == true
+            self.hasPremium = customerInfo?.entitlements.all["Premium"]?.isActive == true
         }
     }
 

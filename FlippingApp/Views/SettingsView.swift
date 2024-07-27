@@ -347,8 +347,12 @@ struct WhatsNewView: View {
     }
 }
 
+// MARK: - Tip Jar
+
 struct TipJarView: View {
     @EnvironmentObject private var itemController: ItemController
+    @State private var tipPackages: [Package]?
+    @State private var showingTipThankYouAlert: Bool = false
     
     var body: some View {
         ZStack {
@@ -365,39 +369,83 @@ struct TipJarView: View {
                     .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
                 
-                HStack(alignment: .center) {
-                    VStack(alignment: .leading) {
-                        Text("Small Tip")
-                            .font(.title3)
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                        Text("Still very appreciated :)")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            .font(.caption)
+                if let tipPackages {
+                    ForEach(tipPackages) { package in
+                        HStack {
+                            if package.identifier == "small-tip" {
+                                VStack {
+                                    Text("Small Tip")
+                                        .font(.title3)
+                                    Text("Still very appreciated :)")
+                                        .font(.caption)
+                                }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
+                                        if let customerInfo, error == nil {
+                                            log.info("User tipped: \(transaction?.productIdentifier)")
+                                            self.showingTipThankYouAlert.toggle()
+                                        }
+                                    }
+                                } label: {
+                                    Text("\(package.storeProduct.localizedPriceString)")
+                                        .foregroundStyle(.white)
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(Color.accentColor)
+                                        )
+                                }
+                                
+                            } else if package.identifier == "big-tip" {
+                                VStack {
+                                    Text("Big Tip")
+                                        .font(.title3)
+                                    Text("Legendary support! :o")
+                                        .font(.caption)
+                                }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
+                                        if let customerInfo, error == nil {
+                                            log.info("User tipped: \(transaction?.productIdentifier)")
+                                            self.showingTipThankYouAlert.toggle()
+                                        }
+                                    }
+                                } label: {
+                                    Text("\(package.storeProduct.localizedPriceString)")
+                                        .foregroundStyle(.white)
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .fill(Color.accentColor)
+                                        )
+                                }
+                            }
+                        }
                     }
-                    
-                    ProductView(id: "JFITierOneTip")
-                        .productViewStyle(.compact)
-                        .tint(.accentColor)
-                }
-                
-                HStack(alignment: .center) {
-                    VStack(alignment: .leading) {
-                        Text("Big Tip")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            .font(.title3)
-                        Text("For my biggest fans :D")
-                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            .font(.caption)
-                    }
-                    
-                    ProductView(id: "JFITierTwoTip")
-                        .productViewStyle(.compact)
-                        .tint(.accentColor)
                 }
                 
                 Spacer()
             }
             .padding()
+            .alert("Email Unavailable", isPresented: $showingTipThankYouAlert) {
+                Button("You're welcome!", role: .cancel) { }
+            } message: {
+                Text("Thank you so much! ❤️❤️❤️")
+            }
+            .onAppear {
+                Purchases.shared.getOfferings { (offerings, error) in
+                    if let packages = offerings?.offering(identifier: "Tips")?.availablePackages {
+                        log.info("Fetched tips packages")
+                        self.tipPackages = packages
+                    }
+                }
+            }
         }
     }
 }
@@ -467,7 +515,7 @@ struct SubscribePage: View {
                         ForEach(currentOffering.availablePackages) { package in
                             Button {
                                 Purchases.shared.purchase(package: package) { (transaction, customerInfo, error, userCancelled) in
-                                    if customerInfo?.entitlements["Pro"]?.isActive == true {
+                                    if customerInfo?.entitlements["Premium"]?.isActive == true {
                                         log.info("Premium purchased. Setting hasPremium to true.")
                                         itemController.hasPremium = true
                                         self.isPresented = false
@@ -491,7 +539,7 @@ struct SubscribePage: View {
                     Button {
                         Purchases.shared.restorePurchases { customerInfo, error in
                             
-                            if customerInfo?.entitlements.all["Pro"]?.isActive == true {
+                            if customerInfo?.entitlements.all["Premium"]?.isActive == true {
                                 log.info("Restoring premium access to user.")
                                 itemController.hasPremium = true
                                 self.isPresented = false

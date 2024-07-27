@@ -203,7 +203,7 @@ fileprivate struct InventoryRow: View {
                 Spacer()
                 
                 if let soldPrice = item.soldPrice {
-                    Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
+                    Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))) per unit")
                 } else {
                     Text("\(item.listedPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD"))) per unit")
                 }

@@ -17,7 +17,7 @@ struct Just_Flip_It_App: App {
 
     init() {
         Purchases.logLevel = .debug
-        Purchases.configure(withAPIKey: "appl_HlewlmKSNgSHHaVbpqpoRQfJXot")
+        Purchases.configure(withAPIKey: "appl_rwgBhKeRFdbZuSUvfkRGCvpOxqO")
         
         do {
             let modelContainer = try ModelContainer(for: Item.self, Tag.self)
