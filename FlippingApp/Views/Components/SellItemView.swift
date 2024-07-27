@@ -41,9 +41,8 @@ struct SellItemView: View {
     }
     
     private var estimatedProfit: Double {
-        let fee: Double = priceSoldAt * platformFees
-        let total = ((priceSoldAt - fee) - item.purchasePrice - otherFees) * Double(quantityToSell)
-        return total
+        let platformFees = priceSoldAt * platformFees
+        return ((priceSoldAt * Double(item.quantity)) - platformFees - otherFees)
     }
     
     private func processSale() {
@@ -161,16 +160,15 @@ struct SellItemView: View {
                             
                             HStack {
                                 HStack {
-                                    Button {
-                                        self.showingOtherFeesInfo.toggle()
-                                    } label: {
-                                        Image(systemName: "info.circle")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 20)
-                                    }
+                                    Image(systemName: "info.circle")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20)
                                     
                                     Text("Other Fees:")
+                                }
+                                .onTapGesture {
+                                    self.showingOtherFeesInfo.toggle()
                                 }
                                 
                                 TextField("$0.00", value: $otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))

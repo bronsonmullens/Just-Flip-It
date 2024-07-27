@@ -91,7 +91,7 @@ struct ReceiptView: View {
                                 }
 
                                 HStack {
-                                    Text("Final Sale Price")
+                                    Text("Final Price Per Item")
 
                                     TextField("", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
@@ -107,7 +107,7 @@ struct ReceiptView: View {
                                 }
 
                                 if let soldPrice = item.soldPrice {
-                                    LabeledContent("Final Sale Price") {
+                                    LabeledContent("Final Price Per Item") {
                                         Text("\(soldPrice.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
                                     }
                                 }

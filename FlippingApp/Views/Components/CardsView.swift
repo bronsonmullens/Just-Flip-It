@@ -22,11 +22,11 @@ struct CardsView: View {
             }
             
             Card {
-                SoldItemsCardContent()
+                TotalValueCardContent()
             }
             
             Card {
-                TotalValueCardContent()
+                SoldItemsCardContent()
             }
         }
     }
