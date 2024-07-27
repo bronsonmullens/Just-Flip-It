@@ -17,6 +17,7 @@ struct EditInventoryItemView: View {
     @State private var purchaseDatePickerShown: Bool = false
     @State private var presentingTagPicker: Bool = false
     @State private var navigateToSellView = false
+    @State private var showingTagInfoAlert: Bool = false
     
     @Bindable var item: Item
     
@@ -143,8 +144,17 @@ struct EditInventoryItemView: View {
                     
                     Section {
                         HStack {
-                            Text("Add a tag?")
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                            HStack {
+                                Image(systemName: "info.circle")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 20)
+                                    .onTapGesture {
+                                        self.showingTagInfoAlert.toggle()
+                                    }
+                                
+                                Text("Add a tag?")
+                            }
                             
                             Spacer()
                             
@@ -202,5 +212,10 @@ struct EditInventoryItemView: View {
                 Text("Sell")
             }
         })
+        .alert("Tags", isPresented: $showingTagInfoAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Tags are like categories for your items. Create as many as you'd like to organize your items however you like.")
+        }
     }
 }
