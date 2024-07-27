@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import RevenueCat
 
 struct EditInventoryItemView: View {
     @EnvironmentObject private var itemController: ItemController
@@ -18,6 +19,9 @@ struct EditInventoryItemView: View {
     @State private var presentingTagPicker: Bool = false
     @State private var navigateToSellView = false
     @State private var showingTagInfoAlert: Bool = false
+    @State private var currentOffering: Offering?
+    @State private var showingSubscribeSheet: Bool = false
+    @State private var showingEnlargedImage: Bool = false
     
     @Bindable var item: Item
     
@@ -49,15 +53,17 @@ struct EditInventoryItemView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .cornerRadius(10)
                                     .frame(width: 120)
+                                    .onTapGesture {
+                                        self.showingEnlargedImage.toggle()
+                                    }
                                 
                                 Spacer()
                                 
-                                Button {
-                                    self.item.imageData = nil
-                                } label: {
-                                    Text("Remove Image")
-                                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                                }
+                                Text("Remove Image")
+                                    .onTapGesture {
+                                        self.item.imageData = nil
+                                        self.itemImage = nil
+                                    }
                             }
                         } else {
                             if itemController.hasPremium {
@@ -79,7 +85,10 @@ struct EditInventoryItemView: View {
                                 }
                             } else {
                                 Text("Subscribe to edit item's photo")
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(Color.accentColor)
+                                    .onTapGesture {
+                                        self.showingSubscribeSheet.toggle()
+                                    }
                             }
                         }
                     }
@@ -185,6 +194,14 @@ struct EditInventoryItemView: View {
         .popover(isPresented: $presentingTagPicker, content: {
             TagView(isPresented: $presentingTagPicker, tag: $item.tag)
         })
+        .popover(isPresented: $showingEnlargedImage, content: {
+            ImageView(isPresented: $showingEnlargedImage, imageData: $item.imageData)
+        })
+        .sheet(isPresented: $showingSubscribeSheet, content: {
+            SubscribePage(currentOffering: $currentOffering, isPresented: $showingSubscribeSheet)
+                .presentationDetents([.height(600)])
+                .presentationDragIndicator(.hidden)
+        })
         .onAppear {
             if item.purchaseDate != nil {
                 self.purchaseDatePickerShown = true
@@ -197,6 +214,14 @@ struct EditInventoryItemView: View {
             if item.quantity == 0 {
                 log.info("Quantity exhausted. Dismissing edit page.")
                 presentationMode.wrappedValue.dismiss()
+            }
+            
+            Purchases.shared.getOfferings { offerings, error in
+                if let offering = offerings?.current, error == nil {
+                    self.currentOffering = offering
+                } else {
+                    log.error("Error: \(String(describing: error))")
+                }
             }
         }
         .navigationTitle(Text("Edit Item"))

@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import PhotosUI
+import RevenueCat
 
 struct AddInventoryItemView: View {
     @Environment(\.modelContext) private var modelContext
@@ -30,6 +31,9 @@ struct AddInventoryItemView: View {
     @State private var presentingTagPicker: Bool = false
     @State private var purchaseDatePickerShown: Bool = false
     @State private var showingTagInfoAlert: Bool = false
+    @State private var currentOffering: Offering?
+    @State private var showingSubscribeSheet: Bool = false
+    @State private var showingEnlargedImage: Bool = false
     
     private func validateInputData() -> Bool {
         guard let quantity = quantity,
@@ -131,13 +135,15 @@ struct AddInventoryItemView: View {
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 120)
+                                    .onTapGesture {
+                                        self.showingEnlargedImage.toggle()
+                                    }
                                 Spacer()
-                                Button {
-                                    self.imageData = nil
-                                    self.itemImage = nil
-                                } label: {
-                                    Text("Remove Image")
-                                }
+                                Text("Remove Image")
+                                    .onTapGesture {
+                                        self.imageData = nil
+                                        self.itemImage = nil
+                                    }
                             }
                         } else {
                             if itemController.hasPremium {
@@ -159,7 +165,10 @@ struct AddInventoryItemView: View {
                                 }
                             } else {
                                 Text("Subscribe to attach a photo")
-                                    .foregroundStyle(.gray)
+                                    .foregroundStyle(Color.accentColor)
+                                    .onTapGesture {
+                                        self.showingSubscribeSheet.toggle()
+                                    }
                             }
                         }
                     }
@@ -259,6 +268,23 @@ struct AddInventoryItemView: View {
             .popover(isPresented: $presentingTagPicker, content: {
                 TagView(isPresented: $presentingTagPicker, tag: $tag)
             })
+        }
+        .popover(isPresented: $showingEnlargedImage, content: {
+            ImageView(isPresented: $showingEnlargedImage, imageData: $imageData)
+        })
+        .sheet(isPresented: $showingSubscribeSheet, content: {
+            SubscribePage(currentOffering: $currentOffering, isPresented: $showingSubscribeSheet)
+                .presentationDetents([.height(600)])
+                .presentationDragIndicator(.hidden)
+        })
+        .onAppear {
+            Purchases.shared.getOfferings { offerings, error in
+                if let offering = offerings?.current, error == nil {
+                    self.currentOffering = offering
+                } else {
+                    log.error("Error: \(String(describing: error))")
+                }
+            }
         }
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
     }

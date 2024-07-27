@@ -111,7 +111,6 @@ struct StatsView: View {
                 } else {
                     log.error("Error: \(error)")
                 }
-                
             }
         }
     }
