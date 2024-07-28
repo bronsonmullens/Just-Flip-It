@@ -49,6 +49,7 @@ struct SellItemView: View {
         let soldItem = Item(title: item.title,
                             imageData: item.imageData,
                             quantity: quantityToSell,
+                            deleteWhenQuantityReachesZero: item.deleteWhenQuantityReachesZero,
                             purchaseDate: item.purchaseDate,
                             purchasePrice: item.purchasePrice,
                             listedPrice: item.listedPrice,
@@ -60,7 +61,7 @@ struct SellItemView: View {
                             soldPrice: priceSoldAt)
         modelContext.insert(soldItem)
         self.item.quantity -= quantityToSell
-        if item.quantity <= 0 {
+        if item.quantity <= 0 && item.deleteWhenQuantityReachesZero {
             modelContext.delete(item)
             log.info("Deleted item with depleted stock: \(item.title)")
         }

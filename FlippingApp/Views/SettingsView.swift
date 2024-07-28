@@ -53,14 +53,13 @@ struct SettingsView: View {
         
         let application = UIApplication.shared
         application.open(webURL)
-        
     }
     
-    private func rateAppRequest() {
-        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-            SKStoreReviewController.requestReview(in: scene)
-        }
-    }
+//    private func rateAppRequest() {
+//        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+//            SKStoreReviewController.requestReview(in: scene)
+//        }
+//    }
     
     // MARK: - CSV Support
     
@@ -150,15 +149,10 @@ struct SettingsView: View {
             .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
             
             Section {
-                HStack {
-                    Text("🎨 Select a theme")
-                        .foregroundStyle(itemController.hasPremium ?  Color("\(itemController.selectedTheme.rawValue)Text") : .gray)
-                    
-                    Picker("", selection: $itemController.selectedTheme) {
-                        ForEach(ColorTheme.allCases, id: \.self) {
-                            Text($0.rawValue)
-                                .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                        }
+                Picker("🎨 Select a Theme", selection: $itemController.selectedTheme) {
+                    ForEach(ColorTheme.allCases, id: \.self) {
+                        Text($0.rawValue)
+                            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     }
                     .pickerStyle(.menu)
                     .onChange(of: itemController.selectedTheme) { newTheme in
@@ -196,12 +190,12 @@ struct SettingsView: View {
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 })
                 
-                Button(action: {
-                    self.rateAppRequest()
-                }, label: {
-                    Text("⭐️ Rate the App")
-                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                })
+//                Button(action: {
+//                    self.rateAppRequest()
+//                }, label: {
+//                    Text("⭐️ Rate the App")
+//                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+//                })
                 
                 Button(action: {
                     if mailButtonEnabled {
@@ -281,7 +275,7 @@ struct SettingsView: View {
         })
         .sheet(isPresented: $showingTipJarAlert, content: {
             TipJarView()
-                .presentationDetents([.height(230)])
+                .presentationDetents([.height(300)])
                 .presentationDragIndicator(.hidden)
         })
         .sheet(isPresented: $showingSubscribePage, content: {
@@ -368,12 +362,18 @@ struct TipJarView: View {
                     .font(.headline)
                     .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                     .padding(.bottom)
+                Text("Keep in mind this is simply you tipping me as a way to thank me for the work I put into the app. You will not receive anything for tipping except my gratitude.")
+                    .font(.caption)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom)
                 
                 if let tipPackages {
                     ForEach(tipPackages) { package in
                         HStack {
                             if package.identifier == "small-tip" {
-                                VStack {
+                                VStack(alignment: .leading) {
                                     Text("Small Tip")
                                         .font(.title3)
                                     Text("Still very appreciated :)")
@@ -400,7 +400,7 @@ struct TipJarView: View {
                                 }
                                 
                             } else if package.identifier == "big-tip" {
-                                VStack {
+                                VStack(alignment: .leading) {
                                     Text("Big Tip")
                                         .font(.title3)
                                     Text("Legendary support! :o")

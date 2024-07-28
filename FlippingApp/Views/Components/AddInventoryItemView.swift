@@ -19,6 +19,7 @@ struct AddInventoryItemView: View {
     
     @State private var title: String?
     @State private var quantity: Int?
+    @State private var deleteWhenQuantityReachesZero: Bool = true
     @State private var itemImage: PhotosPickerItem?
     @State private var imageData: Data?
     @State private var purchasePrice: Double?
@@ -73,6 +74,7 @@ struct AddInventoryItemView: View {
             let newItem = Item(title: title,
                                imageData: imageData,
                                quantity: quantity,
+                               deleteWhenQuantityReachesZero: deleteWhenQuantityReachesZero,
                                purchaseDate: purchaseDate,
                                purchasePrice: purchasePrice,
                                listedPrice: listedPrice,
@@ -100,6 +102,7 @@ struct AddInventoryItemView: View {
                 
                 Text("New Item")
                     .font(.headline)
+                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 
                 Spacer()
                 
@@ -125,6 +128,11 @@ struct AddInventoryItemView: View {
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                         }
+                        
+                        Toggle(isOn: $deleteWhenQuantityReachesZero, label: {
+                            Text("Delete when quantity is 0?")
+                        })
+                        .tint(.green)
                     }
                     .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
@@ -165,7 +173,6 @@ struct AddInventoryItemView: View {
                                 }
                             } else {
                                 Text("Subscribe to attach a photo")
-                                    .foregroundStyle(Color.accentColor)
                                     .onTapGesture {
                                         self.showingSubscribeSheet.toggle()
                                     }

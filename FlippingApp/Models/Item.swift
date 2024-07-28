@@ -16,6 +16,7 @@ class Item: Identifiable {
     var dateAdded: Date? = Date()
     var imageData: Data?
     var quantity: Int = 1
+    var deleteWhenQuantityReachesZero: Bool = true
     var purchaseDate: Date?
     var purchasePrice: Double = 0.00
     var listedPrice: Double = 0.00
@@ -28,11 +29,12 @@ class Item: Identifiable {
     var otherFees: Double? // Percentage
     var soldPrice: Double?
 
-    init(title: String, id: String = UUID().uuidString, imageData: Data?, quantity: Int, purchaseDate: Date?, purchasePrice: Double, listedPrice: Double, tag: Tag? = nil, notes: String?, soldDate: Date? = nil, platformFees: Double? = nil, otherFees: Double? = nil, soldPrice: Double? = nil) {
+    init(title: String, id: String = UUID().uuidString, imageData: Data?, quantity: Int, deleteWhenQuantityReachesZero: Bool, purchaseDate: Date?, purchasePrice: Double, listedPrice: Double, tag: Tag? = nil, notes: String?, soldDate: Date? = nil, platformFees: Double? = nil, otherFees: Double? = nil, soldPrice: Double? = nil) {
         self.title = title
         self.id = id
         self.imageData = imageData
         self.quantity = quantity
+        self.deleteWhenQuantityReachesZero = deleteWhenQuantityReachesZero
         self.purchaseDate = purchaseDate
         self.purchasePrice = purchasePrice
         self.listedPrice = listedPrice

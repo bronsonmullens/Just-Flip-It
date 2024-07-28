@@ -8,6 +8,7 @@
 import SwiftUI
 import PhotosUI
 import RevenueCat
+import Combine
 
 struct EditInventoryItemView: View {
     @EnvironmentObject private var itemController: ItemController
@@ -41,7 +42,17 @@ struct EditInventoryItemView: View {
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
+                                .onReceive(Just(item.quantity)) { _ in
+                                    if item.quantity <= 0 && item.deleteWhenQuantityReachesZero {
+                                        item.quantity = 1
+                                    }
+                                }
                         }
+                        
+                        Toggle(isOn: $item.deleteWhenQuantityReachesZero, label: {
+                            Text("Delete when quantity is 0?")
+                        })
+                        .tint(.green)
                     }
                     .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                     
@@ -211,7 +222,7 @@ struct EditInventoryItemView: View {
                 self.tag = tag
             }
             
-            if item.quantity == 0 {
+            if item.quantity <= 0 && item.deleteWhenQuantityReachesZero {
                 log.info("Quantity exhausted. Dismissing edit page.")
                 presentationMode.wrappedValue.dismiss()
             }
