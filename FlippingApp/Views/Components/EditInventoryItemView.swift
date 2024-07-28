@@ -107,7 +107,7 @@ struct EditInventoryItemView: View {
                     
                     Section {
                         HStack {
-                            Text("Cost per item")
+                            Text("Your cost per item")
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                             Spacer()
                             TextField("", value: $item.purchasePrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"), prompt: Text("$0.00"))
