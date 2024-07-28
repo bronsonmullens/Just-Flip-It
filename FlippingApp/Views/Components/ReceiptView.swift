@@ -18,6 +18,7 @@ struct ReceiptView: View {
 
     @State private var editMode: Bool = false
     @State private var showingDeleteWarning: Bool = false
+    @State private var showingRestoreWarning: Bool = false
 
     var body: some View {
         ZStack {
@@ -48,6 +49,10 @@ struct ReceiptView: View {
                     Menu("Options") {
                         Button("\(editMode ? "Done" : "Edit")") {
                             editMode.toggle()
+                        }
+                        
+                        Button("Restore") {
+                            showingRestoreWarning.toggle()
                         }
                         
                         Button("Delete") {
@@ -197,6 +202,26 @@ struct ReceiptView: View {
                 }
             }
             .toolbar(.hidden)
+        }
+        .alert("Restore Item?", isPresented: $showingRestoreWarning) {
+            Button("Yes", role: .destructive) {
+                let newItem = Item(title: item.title,
+                                   imageData: item.imageData,
+                                   quantity: item.quantity,
+                                   deleteWhenQuantityReachesZero: item.deleteWhenQuantityReachesZero,
+                                   purchaseDate: item.purchaseDate,
+                                   purchasePrice: item.purchasePrice,
+                                   listedPrice: item.listedPrice,
+                                   tag: item.tag,
+                                   notes: item.notes)
+                modelContext.delete(self.item)
+                log.info("Deleted item from receipts.")
+                modelContext.insert(newItem)
+                log.info("Added item to inventory")
+                presentationMode.wrappedValue.dismiss()
+            }
+        } message: {
+            Text("This will recreate this inventory item and delete this receipt. This is an action that cannot be undone and you will lose this sold item forever. This will impact stats tracked in the Stats tab. Are you sure?")
         }
         .alert("Delete Item?", isPresented: $showingDeleteWarning) {
             Button("Yes", role: .destructive) {
