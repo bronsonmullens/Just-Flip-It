@@ -11,6 +11,7 @@ import RevenueCat
 import Combine
 
 struct EditInventoryItemView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
     @Environment(\.presentationMode) private var presentationMode
     
@@ -23,6 +24,7 @@ struct EditInventoryItemView: View {
     @State private var currentOffering: Offering?
     @State private var showingSubscribeSheet: Bool = false
     @State private var showingEnlargedImage: Bool = false
+    @State private var showingDeleteWarning: Bool = false
     
     @Bindable var item: Item
     
@@ -241,17 +243,53 @@ struct EditInventoryItemView: View {
             SellItemView(item: item)
         }
         .toolbar(content: {
-            Button {
-                log.info("Navigating to SellItemView from edit page.")
-                navigateToSellView = true
-            } label: {
-                Text("Sell")
+            Menu("Options") {
+                Button {
+                    log.info("Navigating to SellItemView from edit page.")
+                    navigateToSellView = true
+                } label: {
+                    Text("Sell")
+                }
+                
+                Button {
+                    let newItem = Item(title: item.title,
+                                       imageData: item.imageData,
+                                       quantity: item.quantity,
+                                       deleteWhenQuantityReachesZero: item.deleteWhenQuantityReachesZero,
+                                       purchaseDate: item.purchaseDate,
+                                       purchasePrice: item.purchasePrice,
+                                       listedPrice: item.listedPrice,
+                                       tag: item.tag,
+                                       notes: item.notes)
+                    log.info("Added duplicated item to inventory.")
+                    modelContext.insert(newItem)
+                    log.info("Returning to inventory.")
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Text("Duplicate")
+                }
+                
+                Button {
+                    self.showingDeleteWarning = true
+                } label: {
+                    Text("Delete")
+                }
             }
         })
         .alert("Tags", isPresented: $showingTagInfoAlert) {
             Button("OK", role: .cancel) { }
         } message: {
             Text("Tags are like categories for your items. Create as many as you'd like to organize your items however you like.")
+        }
+        .alert("Delete Item?", isPresented: $showingDeleteWarning) {
+            Button("Yes", role: .destructive) {
+                log.info("Deleting item from inventory.")
+                modelContext.delete(item)
+                log.info("Returning to inventory")
+                presentationMode.wrappedValue.dismiss()
+            }
+        } message: {
+            Text("Are you sure you want to delete this item? This is an action that cannot be undone and you will lose this item forever. This will impact stats tracked in the Stats tab.")
         }
     }
 }

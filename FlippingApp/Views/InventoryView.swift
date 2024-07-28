@@ -18,7 +18,7 @@ struct InventoryView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
     
-    @Query private var items: [Item]
+    @Query(sort: \Item.dateAdded, order: .reverse) private var items: [Item]
     
     @AppStorage("viewMode") private var viewMode: ViewMode = .viewBasic
     
