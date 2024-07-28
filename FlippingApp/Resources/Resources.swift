@@ -67,6 +67,7 @@ extension Double {
 
 enum ColorTheme: String, CaseIterable, Equatable {
     case standard
+    case oceanic
     case minty
     case lavender
     case sunrise

@@ -26,6 +26,7 @@ struct SettingsView: View {
     @State private var itemTypeToDelete: DeleteType?
     @State private var showingEmailUnavailableAlert: Bool = false
     @State private var currentOffering: Offering?
+    @State private var showingHelpPage: Bool = false
     
     private let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     private let supportVideoLink = "https://youtu.be/IU6uj-rIe5s"
@@ -48,12 +49,12 @@ struct SettingsView: View {
         }
     }
     
-    private func openYouTubeSupport() {
-        let webURL = URL(string: "https://youtu.be/IU6uj-rIe5s")! // TODO: Create support video
-        
-        let application = UIApplication.shared
-        application.open(webURL)
-    }
+//    private func openYouTubeSupport() {
+//        let webURL = URL(string: "https://google.com")! // TODO: Create support video
+//
+//        let application = UIApplication.shared
+//        application.open(webURL)
+//    }
     
 //    private func rateAppRequest() {
 //        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
@@ -217,7 +218,7 @@ struct SettingsView: View {
                 })
                 
                 Button(action: {
-                    self.openYouTubeSupport()
+                    self.showingHelpPage.toggle()
                 }, label: {
                     Text("🛟 Help")
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
@@ -285,6 +286,9 @@ struct SettingsView: View {
         })
         .sheet(isPresented: $showingPrivacyPolicyPage, content: {
             PrivacyPolicyPage()
+        })
+        .sheet(isPresented: $showingHelpPage, content: {
+            HelpPage()
         })
         .alert("Delete \(itemTypeToDelete?.rawValue ?? "Unknown")?", isPresented: $showingDeletionAlert) {
             Button("Yes", role: .destructive) {
@@ -609,6 +613,45 @@ struct PrivacyPolicyPage: View {
                 Spacer()
             }
             .padding()
+        }
+    }
+}
+
+fileprivate struct HelpPage: View {
+    @EnvironmentObject private var itemController: ItemController
+    
+    var body: some View {
+        ZStack {
+            Color("\(itemController.selectedTheme.rawValue)Background")
+                .ignoresSafeArea(.all)
+            
+            Form {
+                Section("Creating Items") {
+                    Text("Tap the + on the home screen and select 'Add to inventory' to bring up the add item sheet. Here you can specify details for your item before saving it to your inventory.")
+                }
+                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                
+                Section("Selling Items") {
+                    Text("Just like adding an item, you may tap the + on the home screen and select 'Report a sale'. This will pull up a view of your inventory where you may select an item to sell.")
+                    
+                    Text("Alternatively, you may sell an item directly from the inventory after selecting an item to edit.")
+                    
+                    Text("After selling an item, your quantity for that item will be reduced by the sold amount. If that amount reaches 0, and you didn't toggle off auto-deletion for that item, the item will be deleted from your inventory.")
+                }
+                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                
+                Section("Viewing your Items") {
+                    Text("Tap the Inventory tab to view your current active items and the Receipts tab to view your previously sold items.")
+                    Text("You may change the way items are displayed - either as rows or in a grid.")
+                }
+                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                
+                Section("Providing Feedback") {
+                    Text("Feel free to send me any feedback, suggestions, or report bugs to my email. You can find a link in settings. I'll be taking a more active approach to working on this app, so I hope I can make it the best it can be :)")
+                }
+                .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+            }
+            .scrollContentBackground(.hidden)
         }
     }
 }

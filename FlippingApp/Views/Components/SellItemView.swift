@@ -59,6 +59,7 @@ struct SellItemView: View {
                             platformFees: platformFees,
                             otherFees: otherFees,
                             soldPrice: priceSoldAt)
+        if saleDate == nil { soldItem.soldDate = .now }
         modelContext.insert(soldItem)
         self.item.quantity -= quantityToSell
         if item.quantity <= 0 && item.deleteWhenQuantityReachesZero {

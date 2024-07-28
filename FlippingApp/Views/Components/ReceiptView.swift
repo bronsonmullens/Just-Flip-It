@@ -17,6 +17,7 @@ struct ReceiptView: View {
     @Bindable var item: Item
 
     @State private var editMode: Bool = false
+    @State private var showingDeleteWarning: Bool = false
 
     var body: some View {
         ZStack {
@@ -44,11 +45,14 @@ struct ReceiptView: View {
 
                     Spacer()
 
-                    Button {
-                        editMode.toggle()
-                    } label: {
-                        Text(editMode ? "Done" : "Edit")
-                            .foregroundStyle(Color.accentColor)
+                    Menu("Options") {
+                        Button("\(editMode ? "Done" : "Edit")") {
+                            editMode.toggle()
+                        }
+                        
+                        Button("Delete") {
+                            showingDeleteWarning.toggle()
+                        }
                     }
                 }
                 .padding()
@@ -193,6 +197,15 @@ struct ReceiptView: View {
                 }
             }
             .toolbar(.hidden)
+        }
+        .alert("Delete Item?", isPresented: $showingDeleteWarning) {
+            Button("Yes", role: .destructive) {
+                modelContext.delete(self.item)
+                log.info("Deleted item from receipts.")
+                presentationMode.wrappedValue.dismiss()
+            }
+        } message: {
+            Text("Are you sure you want to delete this sold item? This is an action that cannot be undone and you will lose this item forever. This will impact stats tracked in the Stats tab.")
         }
     }
 }

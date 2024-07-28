@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct MainView: View {
-    @AppStorage("firstLaunch") var firstLaunch: Bool = true // TODO: Remove
-    @Environment(\.modelContext) private var modelContext // TODO: Remove
     @EnvironmentObject private var itemController: ItemController
     
     var body: some View {
