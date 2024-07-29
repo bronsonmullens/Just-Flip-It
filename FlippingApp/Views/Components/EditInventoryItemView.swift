@@ -240,7 +240,7 @@ struct EditInventoryItemView: View {
         .navigationTitle(Text("Edit Item"))
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
         .navigationDestination(isPresented: $navigateToSellView) {
-            SellItemView(item: item)
+            SellItemView(item: $item)
         }
         .toolbar(content: {
             Menu("Options") {

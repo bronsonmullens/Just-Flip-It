@@ -121,7 +121,7 @@ struct InventoryView: View {
                     .scrollContentBackground(.hidden)
                     .navigationDestination(for: Item.self) { item in
                         if sellMode {
-                            SellItemView(item: item)
+                            SellItemView(item: $items[0])
                         } else {
                             if item.soldPrice != nil {
                                 ReceiptView(item: item)

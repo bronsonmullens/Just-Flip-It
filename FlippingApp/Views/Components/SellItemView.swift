@@ -14,7 +14,7 @@ struct SellItemView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     
-    let item: Item
+    @Binding var item: Item
     
     @State private var quantityToSell: Int = 0
     @State private var priceSoldAt: Double = 0.0
@@ -22,22 +22,24 @@ struct SellItemView: View {
     @State private var platformFees: Double = 0.0
     @State private var otherFees: Double = 0.0
     @State private var notes: String?
-    @State private var sellError: SellError?
     @State private var showingPlatformFeesInfo: Bool = false
     @State private var showingOtherFeesInfo: Bool = false
+    @State private var showingErrorAlert: Bool = false
     
-    private func validateInputData() -> Bool {
+    private func validateInputData() -> SellError? {
         if quantityToSell < 0 || quantityToSell > item.quantity {
-            sellError = .invalidQuantity
-            return false
+            return .invalidQuantity
         }
         
         if priceSoldAt < 0 || priceSoldAt > 99_999 {
-            sellError = .invalidSalePrice
-            return false
+            return .invalidSalePrice
         }
         
-        return true
+        if otherFees < 0 || platformFees < 0 || otherFees > 99_999 || platformFees > 99 {
+            return .invalidFees
+        }
+        
+        return nil
     }
     
     private var estimatedProfit: Double {
@@ -210,13 +212,21 @@ struct SellItemView: View {
             } message: {
                 Text("Other fees can be shipping costs or any other cost taken from your profit.")
             }
+            .alert("Error Selling", isPresented: $showingErrorAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("\(validateInputData()?.rawValue ?? "Unknown error")")
+            }
             .toolbar(content: {
                 Button {
-                    processSale()
+                    if validateInputData() == nil {
+                        processSale()
+                    } else {
+                        self.showingErrorAlert.toggle()
+                    }
                 } label: {
                     Text("Sell")
                 }
-                .disabled(validateInputData() == false)
             })
             .navigationTitle(item.title)
             
@@ -228,4 +238,5 @@ struct SellItemView: View {
 fileprivate enum SellError: String {
     case invalidQuantity = "Make sure your quantity is greater than 0 and not greater than your available stock."
     case invalidSalePrice = "Make sure your sale price is greater than 0 and less than 100,000."
+    case invalidFees = "Make sure your fees are not negative numbers and less than 100,000."
 }
