@@ -47,9 +47,9 @@ struct EditInventoryItemView: View {
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
-                                .onReceive(Just(item.quantity)) { _ in
-                                    if item.quantity <= 0 && item.deleteWhenQuantityReachesZero {
-                                        item.quantity = 1
+                                .onChange(of: item.quantity) { newValue in
+                                    if newValue > 9_999 {
+                                        item.quantity = 9_999
                                     }
                                 }
                         }
@@ -119,6 +119,11 @@ struct EditInventoryItemView: View {
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
+                                .onChange(of: item.purchasePrice) { newValue in
+                                    if newValue > 99_999.99 {
+                                        item.purchasePrice = 99_999.99
+                                    }
+                                }
                         }
                         
                         if purchaseDatePickerShown {
@@ -163,6 +168,11 @@ struct EditInventoryItemView: View {
                                 .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
+                                .onChange(of: item.listedPrice) { newValue in
+                                    if newValue > 99_999.99 {
+                                        item.listedPrice = 99_999.99
+                                    }
+                                }
                         }
                     }
                     .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
@@ -219,13 +229,6 @@ struct EditInventoryItemView: View {
                 .presentationDragIndicator(.hidden)
         })
         .onAppear {
-            guard items.contains(item) else {
-                // TODO: Could this be done a better way? The @Binding doesn't seem to be working here.
-                log.info("Item could not be found to edit. Was it deleted or sold?")
-                presentationMode.wrappedValue.dismiss()
-                return
-            }
-            
             if item.purchaseDate != nil {
                 self.purchaseDatePickerShown = true
             }

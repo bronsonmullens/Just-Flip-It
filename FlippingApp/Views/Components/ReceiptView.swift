@@ -72,6 +72,11 @@ struct ReceiptView: View {
                                     TextField("", value: $item.quantity, format: .number)
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.numberPad)
+                                        .onChange(of: item.quantity) { newValue in
+                                            if newValue > 9_999 {
+                                                item.quantity = 9_999
+                                            }
+                                        }
                                 }
                             } else {
                                 LabeledContent("Quantity Sold") {
@@ -89,6 +94,11 @@ struct ReceiptView: View {
                                     TextField("", value: $item.purchasePrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
+                                        .onChange(of: item.purchasePrice) { newValue in
+                                            if newValue > 99_999.99 {
+                                                item.purchasePrice = 99_999.99
+                                            }
+                                        }
                                 }
 
                                 HStack {
@@ -97,6 +107,11 @@ struct ReceiptView: View {
                                     TextField("", value: $item.listedPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
+                                        .onChange(of: item.listedPrice) { newValue in
+                                            if newValue > 99_999.99 {
+                                                item.listedPrice = 99_999.99
+                                            }
+                                        }
                                 }
 
                                 HStack {
@@ -105,6 +120,11 @@ struct ReceiptView: View {
                                     TextField("", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.numberPad)
+                                        .onChange(of: item.soldPrice ?? 0.0) { newValue in
+                                            if newValue > 99_999.99 {
+                                                item.soldPrice = 99_999.99
+                                            }
+                                        }
                                 }
                             } else {
                                 LabeledContent("Purchase Price") {
@@ -161,6 +181,11 @@ struct ReceiptView: View {
                                     TextField("%", value: $item.platformFees, format: .percent)
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
+                                        .onChange(of: item.platformFees ?? 0.0) { newValue in
+                                            if newValue > 99.99 {
+                                                item.platformFees = 99.99
+                                            }
+                                        }
                                 }
 
                                 HStack {
@@ -169,6 +194,11 @@ struct ReceiptView: View {
                                     TextField("", value: $item.otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
+                                        .onChange(of: item.otherFees ?? 0.0) { newValue in
+                                            if newValue > 99_999.99 {
+                                                item.otherFees = 99_999.99
+                                            }
+                                        }
                                 }
                             } else {
                                 if let platformFees = item.platformFees, let soldPrice = item.soldPrice {

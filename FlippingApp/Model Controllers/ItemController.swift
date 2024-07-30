@@ -32,7 +32,7 @@ class ItemController: ObservableObject {
     func calculateProfitForItem(_ item: Item, quantity: Int) -> Double {
         if let soldPrice = item.soldPrice {
             let platformFees = soldPrice * (item.platformFees ?? 0.0)
-            return ((soldPrice * Double(item.quantity)) - platformFees - (item.otherFees ?? 0.0))
+            return (soldPrice - item.purchasePrice - platformFees - (item.otherFees ?? 0.0)) * Double(item.quantity)
         } else {
             // We don't ask for fees when adding an item. This is an estimate.
             return (item.listedPrice - item.purchasePrice) * Double(quantity)

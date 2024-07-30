@@ -31,11 +31,11 @@ struct SellItemView: View {
             return .invalidQuantity
         }
         
-        if priceSoldAt < 0 || priceSoldAt > 99_999 {
+        if priceSoldAt < 0 || priceSoldAt > 99_999.99 {
             return .invalidSalePrice
         }
         
-        if otherFees < 0 || platformFees < 0 || otherFees > 99_999 || platformFees > 99 {
+        if otherFees < 0 || platformFees < 0 || otherFees > 99_999.99 || platformFees > 99.99 {
             return .invalidFees
         }
         
@@ -92,6 +92,11 @@ struct SellItemView: View {
                                 TextField("", value: $quantityToSell, format: .number)
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.numberPad)
+                                    .onChange(of: quantityToSell) { newValue in
+                                        if newValue > 9_999 {
+                                            quantityToSell = 9_999
+                                        }
+                                    }
                             }
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
@@ -108,6 +113,11 @@ struct SellItemView: View {
                                 TextField("$0.00", value: $priceSoldAt, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
+                                    .onChange(of: priceSoldAt) { newValue in
+                                        if newValue > 99_999.99 {
+                                            priceSoldAt = 99_999.99
+                                        }
+                                    }
                             }
                             
                             HStack {
@@ -155,6 +165,11 @@ struct SellItemView: View {
                                 TextField("%", value: $platformFees, format: .percent)
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
+                                    .onChange(of: platformFees) { newValue in
+                                        if newValue > 99.99 {
+                                            platformFees = 99.99
+                                        }
+                                    }
                             }
                             
                             if platformFees != 0.0 {
@@ -178,6 +193,11 @@ struct SellItemView: View {
                                 TextField("$0.00", value: $otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
+                                    .onChange(of: otherFees) { newValue in
+                                        if newValue > 99_999.99 {
+                                            otherFees = 99_999.99
+                                        }
+                                    }
                             }
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
