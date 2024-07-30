@@ -14,7 +14,7 @@ struct SellItemView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     
-    @Binding var item: Item
+    @Bindable var item: Item
     
     @State private var quantityToSell: Int = 0
     @State private var priceSoldAt: Double = 0.0

@@ -29,7 +29,7 @@ struct EditInventoryItemView: View {
     @State private var showingEnlargedImage: Bool = false
     @State private var showingDeleteWarning: Bool = false
     
-    @Binding var item: Item
+    @Bindable var item: Item
     
     var body: some View {
         VStack {
@@ -250,7 +250,7 @@ struct EditInventoryItemView: View {
         .navigationTitle(Text("Edit Item"))
         .background(Color("\(itemController.selectedTheme.rawValue)Background"))
         .navigationDestination(isPresented: $navigateToSellView) {
-            SellItemView(item: $item)
+            SellItemView(item: item)
         }
         .toolbar(content: {
             Menu("Options") {

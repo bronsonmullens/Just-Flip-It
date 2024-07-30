@@ -175,25 +175,13 @@ struct InventoryView: View {
                     }
                     .scrollContentBackground(.hidden)
                     .navigationDestination(for: Item.self) { item in
-                        let selectedItem = Binding<Item>(
-                            get: {
-                                return filteredItems.first(where: { $0.id == item.id }) ?? item
-                            },
-                            set: { newItem in
-                                if let index = filteredItems.firstIndex(where: { $0.id == item.id }) {
-                                    modelContext.insert(newItem)
-                                    modelContext.delete(filteredItems[index])
-                                }
-                            }
-                        )
-                        
                         if sellMode {
-                            SellItemView(item: selectedItem)
+                            SellItemView(item: item)
                         } else {
                             if item.soldPrice != nil {
-                                ReceiptView(item: selectedItem)
+                                ReceiptView(item: item)
                             } else {
-                                EditInventoryItemView(item: selectedItem)
+                                EditInventoryItemView(item: item)
                             }
                         }
                     }
@@ -205,25 +193,14 @@ struct InventoryView: View {
                             }
                         }
                         .navigationDestination(for: Item.self) { item in
-                            let selectedItem = Binding<Item>(
-                                get: {
-                                    return filteredItems.first(where: { $0.id == item.id }) ?? item
-                                },
-                                set: { newItem in
-                                    if let index = filteredItems.firstIndex(where: { $0.id == item.id }) {
-                                        modelContext.insert(newItem)
-                                        modelContext.delete(filteredItems[index])
-                                    }
-                                }
-                            )
                             
                             if sellMode {
-                                SellItemView(item: selectedItem)
+                                SellItemView(item: item)
                             } else {
                                 if item.soldPrice != nil {
-                                    ReceiptView(item: selectedItem)
+                                    ReceiptView(item: item)
                                 } else {
-                                    EditInventoryItemView(item: selectedItem)
+                                    EditInventoryItemView(item: item)
                                 }
                             }
                         }
