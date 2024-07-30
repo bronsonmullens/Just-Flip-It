@@ -48,12 +48,12 @@ struct AddInventoryItemView: View {
             return false
         }
         
-        if purchasePrice < 0 || purchasePrice > 99_999 {
+        if purchasePrice < 0 || purchasePrice > 99_999.99 {
             inputError = InputError.invalidPurchasePrice
             return false
         }
         
-        if listedPrice < 0 || listedPrice > 99_999 {
+        if listedPrice < 0 || listedPrice > 99_999.99 {
             inputError = InputError.invalidListedPrice
             return false
         }
@@ -127,6 +127,11 @@ struct AddInventoryItemView: View {
                             TextField("", value: $quantity, format: .number, prompt: Text("1"))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
+                                .onChange(of: quantity ?? 0) { newValue in
+                                    if newValue > 9_999 {
+                                        quantity = 9_999
+                                    }
+                                }
                         }
                         
                         Toggle(isOn: $deleteWhenQuantityReachesZero, label: {
@@ -188,6 +193,11 @@ struct AddInventoryItemView: View {
                             TextField("", value: $purchasePrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
+                                .onChange(of: purchasePrice ?? 0.0) { newValue in
+                                    if newValue ?? 0.0 > 99_999.99 {
+                                        purchasePrice = 99_999.99
+                                    }
+                                }
                         }
                         
                         if purchaseDatePickerShown {
@@ -228,6 +238,11 @@ struct AddInventoryItemView: View {
                             TextField("", value: $listedPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"), prompt: Text("$0.00"))
                                 .multilineTextAlignment(.trailing)
                                 .keyboardType(.decimalPad)
+                                .onChange(of: listedPrice ?? 0.0) { newValue in
+                                    if newValue ?? 0.0 > 99_999.99 {
+                                        listedPrice = 99_999.99
+                                    }
+                                }
                         }
                     }
                     .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
