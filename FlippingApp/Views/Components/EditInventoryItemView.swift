@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 import PhotosUI
 import RevenueCat
 import Combine
@@ -14,6 +15,8 @@ struct EditInventoryItemView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
     @Environment(\.presentationMode) private var presentationMode
+    
+    @Query private var items: [Item]
     
     @State private var tag: Tag?
     @State private var itemImage: PhotosPickerItem?
@@ -216,6 +219,13 @@ struct EditInventoryItemView: View {
                 .presentationDragIndicator(.hidden)
         })
         .onAppear {
+            guard items.contains(item) else {
+                // TODO: Could this be done a better way? The @Binding doesn't seem to be working here.
+                log.info("Item could not be found to edit. Was it deleted or sold?")
+                presentationMode.wrappedValue.dismiss()
+                return
+            }
+            
             if item.purchaseDate != nil {
                 self.purchaseDatePickerShown = true
             }

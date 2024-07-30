@@ -122,11 +122,9 @@ struct InventoryView: View {
                     .navigationDestination(for: Item.self) { item in
                         let selectedItem = Binding<Item>(
                             get: {
-                                // Get item
                                 return filteredItems.first(where: { $0.id == item.id }) ?? item
                             },
                             set: { newItem in
-                                // Set Item
                                 if let index = filteredItems.firstIndex(where: { $0.id == item.id }) {
                                     modelContext.insert(newItem)
                                     modelContext.delete(filteredItems[index])
