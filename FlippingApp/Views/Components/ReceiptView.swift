@@ -14,7 +14,7 @@ struct ReceiptView: View {
     
     @EnvironmentObject private var itemController: ItemController
 
-    @Bindable var item: Item
+    @Binding var item: Item
 
     @State private var editMode: Bool = false
     @State private var showingDeleteWarning: Bool = false

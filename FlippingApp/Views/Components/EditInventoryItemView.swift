@@ -26,7 +26,7 @@ struct EditInventoryItemView: View {
     @State private var showingEnlargedImage: Bool = false
     @State private var showingDeleteWarning: Bool = false
     
-    @Bindable var item: Item
+    @Binding var item: Item
     
     var body: some View {
         VStack {
