@@ -14,6 +14,8 @@ struct SellItemView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.presentationMode) private var presentationMode
     
+    @Query private var items: [Item]
+    
     @Bindable var item: Item
     
     @State private var quantityToSell: Int = 0
@@ -43,8 +45,7 @@ struct SellItemView: View {
     }
     
     private var estimatedProfit: Double {
-        let platformFees = priceSoldAt * platformFees
-        return ((priceSoldAt * Double(item.quantity)) - platformFees - otherFees)
+        return Double(quantityToSell) * ((priceSoldAt - item.purchasePrice) - (priceSoldAt * platformFees) - otherFees)
     }
     
     private func processSale() {
@@ -109,7 +110,7 @@ struct SellItemView: View {
                             .foregroundStyle(.gray)
                             
                             HStack {
-                                Text("Finale Sale Price:")
+                                Text("Final Sale Price:")
                                 TextField("$0.00", value: $priceSoldAt, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
@@ -251,6 +252,13 @@ struct SellItemView: View {
             .navigationTitle(item.title)
             
             ConfettiView(emissionDuration: 4.0)
+        }
+        .onAppear {
+            guard items.contains(item) else {
+                log.error("Could not find item to edit. Was it recently sold or deleted?")
+                presentationMode.wrappedValue.dismiss()
+                return
+            }
         }
     }
 }

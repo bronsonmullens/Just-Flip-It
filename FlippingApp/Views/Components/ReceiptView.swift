@@ -75,6 +75,8 @@ struct ReceiptView: View {
                                         .onChange(of: item.quantity) { newValue in
                                             if newValue > 9_999 {
                                                 item.quantity = 9_999
+                                            } else if newValue <= 0 && item.deleteWhenQuantityReachesZero {
+                                                item.quantity = 1
                                             }
                                         }
                                 }
@@ -102,27 +104,16 @@ struct ReceiptView: View {
                                 }
 
                                 HStack {
-                                    Text("Listed Price")
-
-                                    TextField("", value: $item.listedPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                        .multilineTextAlignment(.trailing)
-                                        .keyboardType(.decimalPad)
-                                        .onChange(of: item.listedPrice) { newValue in
-                                            if newValue > 99_999.99 {
-                                                item.listedPrice = 99_999.99
-                                            }
-                                        }
-                                }
-
-                                HStack {
                                     Text("Final Price Per Item")
 
-                                    TextField("", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                                    TextField("$0.00", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
-                                        .keyboardType(.numberPad)
+                                        .keyboardType(.decimalPad)
                                         .onChange(of: item.soldPrice ?? 0.0) { newValue in
                                             if newValue > 99_999.99 {
                                                 item.soldPrice = 99_999.99
+                                            } else if newValue < 0 {
+                                                item.soldPrice = 0
                                             }
                                         }
                                 }

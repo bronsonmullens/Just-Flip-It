@@ -110,10 +110,12 @@ struct InventoryView: View {
     
     private func deleteItems(at offsets: IndexSet?) {
         if let offsets = offsets {
-            for offset in offsets {
-                let itemToDelete = items[offset]
-                modelContext.delete(itemToDelete)
-                log.info("Deleted \(itemToDelete.title) (\(itemToDelete.id)")
+            for index in offsets {
+                if index < filteredItems.count {
+                    let itemToDelete = filteredItems[index]
+                    modelContext.delete(itemToDelete)
+                    log.info("Deleted \(itemToDelete.title) (\(itemToDelete.id)")
+                }
             }
         } else {
             log.error("Did not find offsets for items to delete.")
@@ -141,6 +143,7 @@ struct InventoryView: View {
                     Text("Search by tag")
                     Toggle("Search by tag", isOn: $searchByTag)
                         .labelsHidden()
+                        .padding(.trailing)
                     
                     Menu {
                         ForEach(SortMode.allCases, id: \.self) { sortMode in

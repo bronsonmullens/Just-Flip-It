@@ -229,6 +229,12 @@ struct EditInventoryItemView: View {
                 .presentationDragIndicator(.hidden)
         })
         .onAppear {
+            guard items.contains(item) else {
+                log.error("Could not find item to edit. Was it recently sold or deleted?")
+                presentationMode.wrappedValue.dismiss()
+                return
+            }
+            
             if item.purchaseDate != nil {
                 self.purchaseDatePickerShown = true
             }
