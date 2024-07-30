@@ -13,6 +13,7 @@ import WebKit
 import RevenueCat
 
 struct SettingsView: View {
+    @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
     
@@ -159,8 +160,9 @@ struct SettingsView: View {
                     .onChange(of: itemController.selectedTheme) { newTheme in
                         itemController.selectedTheme = newTheme
                     }
-                    .disabled(itemController.hasPremium == false)
                 }
+                .foregroundStyle(itemController.hasPremium == false ? .gray : Color("\(itemController.selectedTheme.rawValue)Text"))
+                .disabled(itemController.hasPremium == false)
                 
                 ShareLink(item: generateCSVForInventory()) {
                     Text("📄 Export Inventory")
@@ -254,6 +256,7 @@ struct SettingsView: View {
                 Button(action: {
                     self.itemTypeToDelete = .everything
                     self.showingDeletionAlert.toggle()
+                    try? modelContext.save()
                 }, label: {
                     Text("⚠️ Delete Everything")
                         .bold()
