@@ -14,13 +14,25 @@ fileprivate enum ViewMode: String, CaseIterable, Equatable {
     case grid = "Grid View"
 }
 
+fileprivate enum SortMode: String, CaseIterable, Equatable {
+    case alphabeticalAscending = "A to Z"
+    case alphabeticalDescending = "Z to A"
+    case listedPriceHighest = "Highest Price"
+    case listedPriceLowest = "Lowest Price"
+    case highestQuantity = "Highest Quantity"
+    case lowestQuantity = "Lowest Quantity"
+    case dateAddedMostRecent = "Most Recent"
+    case dateAddedOldest = "Oldest"
+}
+
 struct InventoryView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var itemController: ItemController
     
-    @Query(sort: \Item.dateAdded, order: .reverse) private var items: [Item]
+    @Query private var items: [Item]
     
     @AppStorage("viewMode") private var viewMode: ViewMode = .viewBasic
+    @AppStorage("sortMode") private var sortMode: SortMode = .dateAddedMostRecent
     
     @State var searchMode: SearchMode
     @State private var searchByTag: Bool = false
@@ -30,6 +42,10 @@ struct InventoryView: View {
     @State private var editingItem: Bool = false
     @State var sellMode: Bool
     
+    private var sortedItems: [Item] {
+        return items.sorted(using: sortDescriptors)
+    }
+    
     private var columns: [GridItem] {
         Array(repeatElement(GridItem(.flexible()), count: 2))
     }
@@ -38,36 +54,57 @@ struct InventoryView: View {
         switch searchMode {
         case .inventory:
             if searchText.isEmpty {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.soldPrice == nil
                 })
             }
             
             if searchByTag {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.tag?.title.range(of: searchText, options: .caseInsensitive) != nil && item.soldPrice == nil
                 })
             } else {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.title.range(of: searchText, options: .caseInsensitive) != nil && item.soldPrice == nil
                 })
             }
         case .receipts:
             if searchText.isEmpty {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.soldPrice != nil
                 })
             }
             
             if searchByTag {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.tag?.title.range(of: searchText, options: .caseInsensitive) != nil && item.soldPrice != nil
                 })
             } else {
-                return items.filter({(item: Item) -> Bool in
+                return sortedItems.filter({(item: Item) -> Bool in
                     return item.title.range(of: searchText, options: .caseInsensitive) != nil && item.soldPrice != nil
                 })
             }
+        }
+    }
+    
+    private var sortDescriptors: [SortDescriptor<Item>] {
+        switch sortMode {
+        case .alphabeticalAscending:
+            return [SortDescriptor(\Item.title, order: .forward)]
+        case .alphabeticalDescending:
+            return [SortDescriptor(\Item.title, order: .reverse)]
+        case .listedPriceHighest:
+            return [SortDescriptor(\Item.listedPrice, order: .reverse)]
+        case .listedPriceLowest:
+            return [SortDescriptor(\Item.listedPrice, order: .forward)]
+        case .dateAddedMostRecent:
+            return [SortDescriptor(\Item.dateAdded, order: .reverse)]
+        case .dateAddedOldest:
+            return [SortDescriptor(\Item.dateAdded, order: .forward)]
+        case .highestQuantity:
+            return [SortDescriptor(\Item.quantity, order: .reverse)]
+        case .lowestQuantity:
+            return [SortDescriptor(\Item.quantity, order: .forward)]
         }
     }
     
@@ -104,6 +141,24 @@ struct InventoryView: View {
                     Text("Search by tag")
                     Toggle("Search by tag", isOn: $searchByTag)
                         .labelsHidden()
+                    
+                    Menu {
+                        ForEach(SortMode.allCases, id: \.self) { sortMode in
+                            Button(action: {
+                                self.sortMode = sortMode
+                            }, label: {
+                                HStack {
+                                    if self.sortMode == sortMode {
+                                        Image(systemName: "checkmark")
+                                    }
+                                    Text(sortMode.rawValue)
+                                }
+                            })
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+
                 }
                 .padding(.horizontal)
                 
