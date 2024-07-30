@@ -7,13 +7,13 @@
 
 import SwiftUI
 import SwiftData
-import StoreKit
 import MessageUI
 import WebKit
 import RevenueCat
 
 struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReview
     @EnvironmentObject private var itemController: ItemController
     @Query private var items: [Item]
     
@@ -50,18 +50,13 @@ struct SettingsView: View {
         }
     }
     
-//    private func openYouTubeSupport() {
-//        let webURL = URL(string: "https://google.com")! // TODO: Create support video
-//
-//        let application = UIApplication.shared
-//        application.open(webURL)
-//    }
-    
-//    private func rateAppRequest() {
-//        if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-//            SKStoreReviewController.requestReview(in: scene)
-//        }
-//    }
+    private func presentReview() {
+        Task {
+            // Delay for two seconds to avoid interrupting the person using the app.
+            try await Task.sleep(for: .seconds(2))
+            await requestReview()
+        }
+    }
     
     // MARK: - CSV Support
     
@@ -193,12 +188,12 @@ struct SettingsView: View {
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 })
                 
-//                Button(action: {
-//                    self.rateAppRequest()
-//                }, label: {
-//                    Text("⭐️ Rate the App")
-//                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-//                })
+                Button(action: {
+                    self.presentReview()
+                }, label: {
+                    Text("⭐️ Rate the App")
+                        .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                })
                 
                 Button(action: {
                     if mailButtonEnabled {
