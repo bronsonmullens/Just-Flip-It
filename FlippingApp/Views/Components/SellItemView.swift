@@ -120,13 +120,6 @@ struct SellItemView: View {
                                         }
                                     }
                             }
-                            
-                            HStack {
-                                Text("Net Profit:")
-                                Spacer()
-                                Text("\(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
-                                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                            }
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         
@@ -200,6 +193,17 @@ struct SellItemView: View {
                                         }
                                     }
                             }
+                        }
+                        .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                        
+                        Section {
+                            HStack {
+                                Text("Net Profit:")
+                                Spacer()
+                                Text("\(estimatedProfit.formatted(.currency(code: Locale.current.currency?.identifier ?? "USD")))")
+                            }
+                            .foregroundStyle(.gray)
+                            .bold()
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
                         
