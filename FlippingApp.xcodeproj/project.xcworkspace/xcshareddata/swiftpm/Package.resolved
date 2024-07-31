@@ -1,16 +1,24 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "SwiftConfettiView",
-        "repositoryURL": "https://github.com/theoriginalbit/SwiftConfettiView",
-        "state": {
-          "branch": null,
-          "revision": "70801fc20faf34d136da4985c2b47f4eb4725bdf",
-          "version": "0.2.0"
-        }
+  "originHash" : "070c1e7e7079ac8a09830bd2c3a0685227b9de79a1914c5787c5b8d14189ad02",
+  "pins" : [
+    {
+      "identity" : "confetti-swiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ottijp/confetti-swiftui",
+      "state" : {
+        "revision" : "fe1c8e8e3d45aa677fb9f579664ba99b643569a9",
+        "version" : "0.1.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "purchases-ios-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios-spm.git",
+      "state" : {
+        "revision" : "0d2f1fa050acad0de99b9b0ce45d53c741c20629",
+        "version" : "5.2.1"
+      }
+    }
+  ],
+  "version" : 3
 }
