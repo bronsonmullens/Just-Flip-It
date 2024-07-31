@@ -1,8 +1,6 @@
 
-# This app does not collect personal data.
+# I do not collect or store your data.
 
-If you have any questions or comment, email me at: bronsonmullens@icloud.com
+All of your personal information, including item data, is initially stored locally on your device. For cloud backups, Just Flip It! uses Apple's CloudKit service which is entirely outside of my view and control. Item and tag data is automatically synced to their secure iCloud servers as you use the app.
 
-Personal information is not collected, used, or stored from the use of this application. All information and settings stored within the app are non-personal and only stored on your local device. This app only stores text - it will never ask for access of your camera or photo library.
-
-The information that is stored within the app consists of the names of items, the price paid, the price it is selling for, and the quantity held. That's it. I don't need your email, name, or a photo of your cat (I'm sure your cat is adorable).
+You can delete your data at any time by deleting individual items in your inventory and sold items view or by using the various deletion options found in settings.
