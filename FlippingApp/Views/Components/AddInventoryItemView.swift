@@ -268,6 +268,9 @@ struct AddInventoryItemView: View {
                                     self.presentingTagPicker.toggle()
                                 }
                         }
+                        .popover(isPresented: $presentingTagPicker, content: {
+                            TagView(isPresented: $presentingTagPicker, tag: $tag)
+                        })
                         
                         VStack(alignment: .leading) {
                             Text("Notes?")
@@ -287,9 +290,6 @@ struct AddInventoryItemView: View {
             } message: {
                 Text("Tags are like categories for your items. Create as many as you'd like to organize your items however you like.")
             }
-            .popover(isPresented: $presentingTagPicker, content: {
-                TagView(isPresented: $presentingTagPicker, tag: $tag)
-            })
         }
         .popover(isPresented: $showingEnlargedImage, content: {
             ImageView(isPresented: $showingEnlargedImage, imageData: $imageData)

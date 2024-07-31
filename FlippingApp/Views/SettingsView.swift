@@ -524,16 +524,26 @@ struct SubscribePage: View {
                                     }
                                 }
                             } label: {
-                                ZStack {
-                                    Rectangle()
-                                        .frame(height: 50)
-                                        .foregroundStyle(Color.accentColor)
-                                        .cornerRadius(10)
+                                HStack(alignment: .center) {
+                                    VStack(alignment: .leading) {
+                                        Text("1 Month")
+                                        Text("Billed Monthly")
+                                    }
                                     
-                                    Text("Monthly: \(package.storeProduct.localizedPriceString)")
-                                        .foregroundStyle(.white)
+                                    Spacer()
+                                    
+                                    Text("\(package.storeProduct.localizedPriceString)")
                                 }
-                                .padding(.bottom)
+                                .padding(.horizontal)
+                                .bold()
+                                .foregroundStyle(.white)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .foregroundStyle(Color.accentColor)
+                                        .frame(minWidth: 250)
+                                        .shadow(color: .black, radius: 4, x: -2, y: 2)
+                                )
                             }
                         }
                     }
@@ -550,6 +560,17 @@ struct SubscribePage: View {
                     } label: {
                         Text("Restore Purchases")
                     }
+                    .padding(.top)
+                    
+                    HStack {
+                        Spacer()
+                        Link("Privacy Policy", destination: URL(string: "https://github.com/bronsonmullens/Just-Flip-It/blob/main/Privacy%20Policy.MD")!)
+                        
+                        Link("Terms of Use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                        
+                        Spacer()
+                    }
+                    .padding(.top)
                     
                     Spacer()
                     

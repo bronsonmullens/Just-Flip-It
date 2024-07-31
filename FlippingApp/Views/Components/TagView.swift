@@ -75,5 +75,6 @@ struct TagView: View {
 
             Spacer()
         }
+        .frame(minHeight: 200)
     }
 }

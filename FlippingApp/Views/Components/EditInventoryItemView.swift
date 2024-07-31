@@ -204,6 +204,9 @@ struct EditInventoryItemView: View {
                                 }
                             }
                         }
+                        .popover(isPresented: $presentingTagPicker, content: {
+                            TagView(isPresented: $presentingTagPicker, tag: $item.tag)
+                        })
                         
                         TextEditor(text: $item.notes.toUnwrapped(defaultValue: ""))
                             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
@@ -217,9 +220,6 @@ struct EditInventoryItemView: View {
                 .ignoresSafeArea(edges: .bottom)
             }
         }
-        .popover(isPresented: $presentingTagPicker, content: {
-            TagView(isPresented: $presentingTagPicker, tag: $item.tag)
-        })
         .popover(isPresented: $showingEnlargedImage, content: {
             ImageView(isPresented: $showingEnlargedImage, imageData: $item.imageData)
         })
