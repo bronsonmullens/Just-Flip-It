@@ -177,7 +177,7 @@ struct AddInventoryItemView: View {
                                                  }
                                 }
                             } else {
-                                Text("Subscribe to attach a photo")
+                                Text("Attach a photo")
                                     .onTapGesture {
                                         self.showingSubscribeSheet.toggle()
                                     }

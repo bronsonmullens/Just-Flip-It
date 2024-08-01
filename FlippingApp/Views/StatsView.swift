@@ -83,6 +83,16 @@ struct StatsView: View {
                                 )
                         }
                         
+                        HStack {
+                            Spacer()
+                            Link("Privacy Policy", destination: URL(string: "https://github.com/bronsonmullens/Just-Flip-It/blob/main/Privacy%20Policy.MD")!)
+                            
+                            Link("Terms of Use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                            
+                            Spacer()
+                        }
+                        .padding(.top)
+                        
                         Button {
                             Purchases.shared.restorePurchases { customerInfo, error in
                                 

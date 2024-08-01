@@ -177,7 +177,7 @@ struct SettingsView: View {
                 Button(action: {
                     self.showingSubscribePage.toggle()
                 }, label: {
-                    Text("💸 Subscribe")
+                    Text("✨ Premium Subscription")
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 })
                 

@@ -100,7 +100,7 @@ struct EditInventoryItemView: View {
                                     }
                                 }
                             } else {
-                                Text("Subscribe to edit item's photo")
+                                Text("Edit item's photo")
                                     .foregroundStyle(Color.accentColor)
                                     .onTapGesture {
                                         self.showingSubscribeSheet.toggle()
