@@ -190,6 +190,11 @@ struct InventoryView: View {
                                             Label("Duplicate", systemImage: "doc.on.doc.fill")
                                         }
                                         .tint(.blue)
+                                        
+                                        NavigationLink(destination: SellItemView(item: item)) {
+                                            Label("Sell", systemImage: "dollarsign.circle")
+                                        }
+                                        .tint(.green)
                                     }
                                 }
                         }

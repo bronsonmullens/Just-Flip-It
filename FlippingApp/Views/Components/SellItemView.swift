@@ -21,8 +21,8 @@ struct SellItemView: View {
     @State private var quantityToSell: Int = 0
     @State private var priceSoldAt: Double = 0.0
     @State private var saleDate: Date?
-    @State private var platformFees: Double = 0.0
-    @State private var otherFees: Double = 0.0
+    @State private var platformFees: Double?
+    @State private var otherFees: Double?
     @State private var notes: String?
     @State private var showingPlatformFeesInfo: Bool = false
     @State private var showingOtherFeesInfo: Bool = false
@@ -30,14 +30,23 @@ struct SellItemView: View {
     
     private func validateInputData() -> SellError? {
         if quantityToSell < 0 || quantityToSell > item.quantity {
+            log.info("Invalid quantity")
             return .invalidQuantity
         }
         
         if priceSoldAt < 0 || priceSoldAt > 99_999.99 {
+            log.info("Invalid sale price")
             return .invalidSalePrice
         }
         
-        if otherFees < 0 || platformFees < 0 || otherFees > 99_999.99 || platformFees > 99.99 {
+        if let platformFees, (platformFees * 100) > 100 || (platformFees * 100) < 0 {
+            log.info("Invalid platform fees")
+            print(">>> platform fees: \(platformFees * 100)")
+            return .invalidFees
+        }
+        
+        if let otherFees, otherFees > 99_999.99 || otherFees < 0 {
+            log.info("Invalid other fees")
             return .invalidFees
         }
         
@@ -45,7 +54,9 @@ struct SellItemView: View {
     }
     
     private var estimatedProfit: Double {
-        return Double(quantityToSell) * ((priceSoldAt - item.purchasePrice) - (priceSoldAt * platformFees) - otherFees)
+        let unwrappedPlatformFees: Double = platformFees ?? 0.0
+        let unwrappedOtherFees: Double = otherFees ?? 0.0
+        return Double(quantityToSell) * ((priceSoldAt - item.purchasePrice) - (priceSoldAt * unwrappedPlatformFees) - unwrappedOtherFees)
     }
     
     private func processSale() {
@@ -59,8 +70,8 @@ struct SellItemView: View {
                             tag: item.tag,
                             notes: notes,
                             soldDate: saleDate,
-                            platformFees: platformFees,
-                            otherFees: otherFees,
+                            platformFees: platformFees ?? 0,
+                            otherFees: otherFees ?? 0.0,
                             soldPrice: priceSoldAt)
         if saleDate == nil { soldItem.soldDate = .now }
         modelContext.insert(soldItem)
@@ -94,8 +105,8 @@ struct SellItemView: View {
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.numberPad)
                                     .onChange(of: quantityToSell) { newValue in
-                                        if newValue > 9_999 {
-                                            quantityToSell = 9_999
+                                        if newValue > item.quantity {
+                                            quantityToSell = item.quantity
                                         }
                                     }
                             }
@@ -150,24 +161,22 @@ struct SellItemView: View {
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 20)
                                     
-                                    Text("Platform Fees:")
+                                    Text("Platform Fees (%):")
                                 }
                                 .onTapGesture {
                                     self.showingPlatformFeesInfo.toggle()
                                 }
                                 
-                                TextField("%", value: $platformFees, format: .percent)
+                                Spacer()
+                                
+                                TextField("0%", value: $platformFees, format: .percent)
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
-                                    .onChange(of: platformFees) { newValue in
-                                        if newValue > 99.99 {
-                                            platformFees = 99.99
-                                        }
-                                    }
+                                    .frame(width: 100)
                             }
                             
-                            if platformFees != 0.0 {
-                                Text((priceSoldAt * platformFees), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                            if platformFees ?? 0.0 > 0 {
+                                Text((priceSoldAt * (platformFees ?? 0.0)), format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .foregroundStyle(.gray)
                             }
                             
@@ -187,11 +196,6 @@ struct SellItemView: View {
                                 TextField("$0.00", value: $otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                     .multilineTextAlignment(.trailing)
                                     .keyboardType(.decimalPad)
-                                    .onChange(of: otherFees) { newValue in
-                                        if newValue > 99_999.99 {
-                                            otherFees = 99_999.99
-                                        }
-                                    }
                             }
                         }
                         .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))

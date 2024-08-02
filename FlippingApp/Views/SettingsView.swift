@@ -674,6 +674,8 @@ fileprivate struct HelpPage: View {
                 }
                 .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
             }
+            .offset(y: 50)
+            .padding(.bottom)
             .scrollContentBackground(.hidden)
         }
     }
