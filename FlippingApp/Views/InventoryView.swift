@@ -27,7 +27,7 @@ fileprivate enum SortMode: String, CaseIterable, Equatable {
 
 struct InventoryView: View {
     @Environment(\.modelContext) private var modelContext
-    @EnvironmentObject private var itemController: ItemController
+    @EnvironmentObject var itemController: ItemController
     
     @Query private var items: [Item]
     
@@ -38,7 +38,7 @@ struct InventoryView: View {
     @State private var searchByTag: Bool = false
     @State private var searchText: String = ""
     @State private var showingItemDeletionAlert: Bool = false
-    @State private var indexSetOfItemsToDelete: IndexSet?
+    @State private var itemToDelete: Item?
     @State private var editingItem: Bool = false
     @State var sellMode: Bool
     
@@ -108,17 +108,13 @@ struct InventoryView: View {
         }
     }
     
-    private func deleteItems(at offsets: IndexSet?) {
-        if let offsets = offsets {
-            for index in offsets {
-                if index < filteredItems.count {
-                    let itemToDelete = filteredItems[index]
-                    modelContext.delete(itemToDelete)
-                    log.info("Deleted \(itemToDelete.title) (\(itemToDelete.id)")
-                }
-            }
+    private func deleteItem() {
+        if let itemToDelete  {
+            modelContext.delete(itemToDelete)
+            log.info("Deleted \(itemToDelete.title): \(itemToDelete.id)")
+            self.itemToDelete = nil
         } else {
-            log.error("Did not find offsets for items to delete.")
+            log.error("Could not find item to delete")
         }
     }
     
@@ -170,11 +166,33 @@ struct InventoryView: View {
                         ForEach(filteredItems) { item in
                             InventoryRow(viewMode: $viewMode, item: item)
                                 .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button {
+                                        self.showingItemDeletionAlert = true
+                                        self.itemToDelete = item
+                                    } label: {
+                                        Label("Delete", systemImage: "trash.fill")
+                                    }
+                                    .tint(.red)
+                                    
+                                    if searchMode == .receipts {
+                                        // TODO: Fix later
+//                                        Button {
+//                                            generateAndShareSellCard(for: item, quantity: item.quantity)
+//                                        } label: {
+//                                            Label("Sell Card", systemImage: "square.and.arrow.up.fill")
+//                                        }
+//                                        .tint(.green)
+                                    } else {
+                                        Button {
+                                            itemController.duplicateItem(item)
+                                        } label: {
+                                            Label("Duplicate", systemImage: "doc.on.doc.fill")
+                                        }
+                                        .tint(.blue)
+                                    }
+                                }
                         }
-                        .onDelete(perform: { indexSet in
-                            self.indexSetOfItemsToDelete = indexSet
-                            self.showingItemDeletionAlert = true
-                        })
                     }
                     .scrollContentBackground(.hidden)
                     .navigationDestination(for: Item.self) { item in
@@ -218,7 +236,7 @@ struct InventoryView: View {
         .searchable(text: $searchText)
         .alert("Delete Item?", isPresented: $showingItemDeletionAlert) {
             Button("Yes", role: .destructive) {
-                deleteItems(at: self.indexSetOfItemsToDelete)
+                deleteItem()
             }
             
         } message: {

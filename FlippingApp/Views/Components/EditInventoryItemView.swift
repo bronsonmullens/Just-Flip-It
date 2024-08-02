@@ -271,17 +271,7 @@ struct EditInventoryItemView: View {
                 }
                 
                 Button {
-                    let newItem = Item(title: item.title,
-                                       imageData: item.imageData,
-                                       quantity: item.quantity,
-                                       deleteWhenQuantityReachesZero: item.deleteWhenQuantityReachesZero,
-                                       purchaseDate: item.purchaseDate,
-                                       purchasePrice: item.purchasePrice,
-                                       listedPrice: item.listedPrice,
-                                       tag: item.tag,
-                                       notes: item.notes)
-                    log.info("Added duplicated item to inventory.")
-                    modelContext.insert(newItem)
+                    itemController.duplicateItem(item)
                     log.info("Returning to inventory.")
                     presentationMode.wrappedValue.dismiss()
                 } label: {

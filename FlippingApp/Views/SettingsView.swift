@@ -142,6 +142,8 @@ struct SettingsView: View {
                     Text("⚖️ Privacy Policy")
                         .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
                 })
+                
+                Link("💼 Terms of Use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
             }
             .listRowBackground(Color("\(itemController.selectedTheme.rawValue)Foreground"))
             
@@ -465,16 +467,17 @@ struct SubscribePage: View {
             Color("\(itemController.selectedTheme.rawValue)Background")
                 .ignoresSafeArea(.all)
             
-            VStack {
+            ScrollView {
                 if let currentOffering = currentOffering {
                     VStack(alignment: .center) {
-                        VStack(alignment: .leading) {
-                            Text("Premium Subscription")
-                                .font(.largeTitle)
+                        VStack(alignment: .center) {
+                            Text("✨ Premium Subscription ✨")
+                                .font(.title)
                                 .padding(.bottom)
                             
                             Text("Unlock everything Just Flip It has to offer for a small monthly fee and support an indie developer.")
                                 .font(.headline)
+                                .multilineTextAlignment(.center)
                         }
                         .padding(.bottom)
                         
@@ -493,7 +496,7 @@ struct SubscribePage: View {
                             
                             HStack {
                                 Image(systemName: "chart.bar.xaxis")
-                                Text("See detailed stats")
+                                Text("See detailed stats*")
                             }
                             .padding(.bottom)
                             
@@ -570,11 +573,12 @@ struct SubscribePage: View {
                         
                         Spacer()
                     }
-                    .padding(.top)
+                    .padding(.vertical)
                     
                     Spacer()
                     
-                    Text("Take your flipping potential to the next level for less than a cup of coffee. Cancel anytime.")
+                    Text("* Data from older versions of the app, that has been migrated, may be missing properties from new data models. Missing data may need to be manually edited to ensure accuracy.")
+                        .font(.caption)
                 } else {
                     HStack(alignment: .bottom) {
                         Image(systemName: "exclamationmark.triangle.fill")

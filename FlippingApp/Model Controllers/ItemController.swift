@@ -172,6 +172,23 @@ class ItemController: ObservableObject {
             log.error("Could not delete inventory items")
         }
     }
+    
+    // MARK: - Other Data Methods
+    
+    func duplicateItem(_ item: Item) {
+        let context = ModelContext(modelContainer)
+        let newItem = Item(title: item.title,
+                           imageData: item.imageData,
+                           quantity: item.quantity,
+                           deleteWhenQuantityReachesZero: item.deleteWhenQuantityReachesZero,
+                           purchaseDate: item.purchaseDate,
+                           purchasePrice: item.purchasePrice,
+                           listedPrice: item.listedPrice,
+                           tag: item.tag,
+                           notes: item.notes)
+        context.insert(newItem)
+        log.info("Added duplicated item to inventory.")
+    }
 
     // MARK: - Migration
 
