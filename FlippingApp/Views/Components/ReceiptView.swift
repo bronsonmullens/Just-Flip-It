@@ -109,11 +109,16 @@ struct ReceiptView: View {
                                     TextField("$0.00", value: $item.soldPrice, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
-                                        .onChange(of: item.soldPrice ?? 0.0) { newValue in
-                                            if newValue > 99_999.99 {
-                                                item.soldPrice = 99_999.99
-                                            } else if newValue < 0 {
-                                                item.soldPrice = 0
+                                        .onChange(of: item.soldPrice) { newValue in
+                                            if let unwrappedSoldPrice: Double = item.soldPrice {
+                                                if unwrappedSoldPrice > 100_000.00 {
+                                                    item.soldPrice = 100_000.00
+                                                } else if unwrappedSoldPrice < 0 {
+                                                    item.soldPrice = 0
+                                                }
+                                            } else {
+                                                log.error("No sold price! Defaulting to $0.00.")
+                                                item.soldPrice = 0.00
                                             }
                                         }
                                 }
@@ -172,9 +177,13 @@ struct ReceiptView: View {
                                     TextField("%", value: $item.platformFees, format: .percent)
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
-                                        .onChange(of: item.platformFees ?? 0.0) { newValue in
-                                            if newValue > 99.99 {
-                                                item.platformFees = 99.99
+                                        .onChange(of: item.platformFees) { newValue in
+                                            if let unwrappedPlatformFees = item.platformFees {
+                                                if unwrappedPlatformFees > 1 {
+                                                    item.platformFees = 1
+                                                } else if unwrappedPlatformFees < 0 {
+                                                    item.platformFees = 0
+                                                }
                                             }
                                         }
                                 }
@@ -185,9 +194,13 @@ struct ReceiptView: View {
                                     TextField("", value: $item.otherFees, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                                         .multilineTextAlignment(.trailing)
                                         .keyboardType(.decimalPad)
-                                        .onChange(of: item.otherFees ?? 0.0) { newValue in
-                                            if newValue > 99_999.99 {
-                                                item.otherFees = 99_999.99
+                                        .onChange(of: item.otherFees) { newValue in
+                                            if let unwrappedOtherFees = item.otherFees {
+                                                if unwrappedOtherFees > 100_000.00 {
+                                                    item.otherFees = 100_000.00
+                                                } else if unwrappedOtherFees < 0 {
+                                                    item.otherFees = 0
+                                                }
                                             }
                                         }
                                 }
