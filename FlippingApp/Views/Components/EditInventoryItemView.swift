@@ -93,8 +93,10 @@ struct EditInventoryItemView: View {
                                     }
                                     .onChange(of: itemImage) { newImage in
                                         Task {
-                                            if let data = try? await newImage?.loadTransferable(type: Data.self) {
-                                                self.item.imageData = data
+                                            if let data = try? await newImage?.loadTransferable(type: Data.self), let uiImage = UIImage(data: data) {
+                                                if let compressedImageData = uiImage.jpegData(compressionQuality: 0.1) {
+                                                    self.item.imageData = compressedImageData
+                                                }
                                             }
                                         }
                                     }

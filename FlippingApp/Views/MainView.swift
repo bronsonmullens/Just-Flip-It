@@ -9,53 +9,61 @@ import SwiftUI
 
 struct MainView: View {
     @EnvironmentObject private var itemController: ItemController
+    @Environment(\.modelContext) private var modelContext
+    @AppStorage("imagesWereCompressed") private var imagesWereCompressed: Bool = false
     
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Label(
-                        title: { Text("Home") },
-                        icon: { Image(systemName: "house") }
-                    )
-                }
-
-            InventoryView(searchMode: .inventory, sellMode: false)
-                .tabItem {
-                    Label(
-                        title: { Text("Inventory") },
-                        icon: { Image(systemName: "list.bullet.clipboard.fill") }
-                    )
-                }
-            
-            InventoryView(searchMode: .receipts, sellMode: false)
-                .tabItem {
-                    Label(
-                        title: { Text("Receipts") },
-                        icon: { Image(systemName: "dollarsign.circle.fill") }
-                    )
-                }
-
-            StatsView()
-                .tabItem {
-                    Label(
-                        title: { Text("Stats") },
-                        icon: { Image(systemName: "chart.bar.fill") }
-                    )
-                }
-
-            SettingsView()
-                .tabItem {
-                    Label(
-                        title: { Text("Settings") },
-                        icon: { Image(systemName: "gearshape") }
-                    )
-                }
+        // TODO: Remove in future update
+        if imagesWereCompressed {
+            TabView {
+                HomeView()
+                    .tabItem {
+                        Label(
+                            title: { Text("Home") },
+                            icon: { Image(systemName: "house") }
+                        )
+                    }
+                
+                InventoryView(searchMode: .inventory, sellMode: false)
+                    .tabItem {
+                        Label(
+                            title: { Text("Inventory") },
+                            icon: { Image(systemName: "list.bullet.clipboard.fill") }
+                        )
+                    }
+                
+                InventoryView(searchMode: .receipts, sellMode: false)
+                    .tabItem {
+                        Label(
+                            title: { Text("Receipts") },
+                            icon: { Image(systemName: "dollarsign.circle.fill") }
+                        )
+                    }
+                
+                StatsView()
+                    .tabItem {
+                        Label(
+                            title: { Text("Stats") },
+                            icon: { Image(systemName: "chart.bar.fill") }
+                        )
+                    }
+                
+                SettingsView()
+                    .tabItem {
+                        Label(
+                            title: { Text("Settings") },
+                            icon: { Image(systemName: "gearshape") }
+                        )
+                    }
+            }
+            .onAppear {
+                UITabBar.appearance().backgroundColor = .clear
+                UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
+            }
+            .tint(Color("\(itemController.selectedTheme.rawValue)Text"))
+        } else {
+            Text("Loading")
+                .font(.title3)
         }
-        .onAppear {
-            UITabBar.appearance().backgroundColor = .clear
-            UITabBar.appearance().barTintColor = UIColor(Color("\(itemController.selectedTheme.rawValue)Text"))
-        }
-        .tint(Color("\(itemController.selectedTheme.rawValue)Text"))
     }
 }

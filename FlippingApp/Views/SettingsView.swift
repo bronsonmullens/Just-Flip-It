@@ -328,16 +328,12 @@ struct WhatsNewView: View {
                 .ignoresSafeArea(.all)
             
             VStack(alignment: .leading) {
-                Text("🎉 MASSIVE UPDATE!")
-                    .font(.title3)
-                    .padding(.bottom)
-                Text("- A new, modern UI")
-                Text("- Automatic cloud backups with iCloud")
-                Text("- Changes to listing, editing, and selling items")
-                Text("- Support for item & platform fees")
-                Text("- Premium features added")
-                Text("- Automated migration for old item data")
-                Text("- Various bug fixes")
+                Text("- Slight improvements to performance")
+                Text("- Images are now compressed to save space and improve performance")
+                Text("- Quantity text field when adding items now defaults to 1")
+                Text("- Added iCloud tooltip to home screen")
+                
+                Spacer()
             }
             .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
             .padding()

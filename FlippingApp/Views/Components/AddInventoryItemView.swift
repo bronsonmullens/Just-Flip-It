@@ -18,7 +18,7 @@ struct AddInventoryItemView: View {
     @Binding var isPresented: Bool
     
     @State private var title: String?
-    @State private var quantity: Int?
+    @State private var quantity: Int = 1
     @State private var deleteWhenQuantityReachesZero: Bool = true
     @State private var itemImage: PhotosPickerItem?
     @State private var imageData: Data?
@@ -37,9 +37,9 @@ struct AddInventoryItemView: View {
     @State private var showingEnlargedImage: Bool = false
     
     private func validateInputData() -> Bool {
-        guard let quantity = quantity,
-              let purchasePrice = purchasePrice,
-              let listedPrice = listedPrice else {
+        guard
+            let purchasePrice = purchasePrice,
+            let listedPrice = listedPrice else {
             return false
         }
         
@@ -64,7 +64,6 @@ struct AddInventoryItemView: View {
     private func createNewItem() {
         if validateInputData() {
             guard let title = title,
-                  let quantity = quantity,
                   let purchasePrice = purchasePrice,
                   let listedPrice = listedPrice else {
                 log.error("Data missing from text field.")
@@ -124,7 +123,7 @@ struct AddInventoryItemView: View {
                         HStack {
                             Text("Quantity")
                             
-                            TextField("", value: $quantity, format: .number, prompt: Text("1"))
+                            TextField("", value: $quantity, format: .number, prompt: Text("i.e. 1"))
                                 .keyboardType(.numberPad)
                                 .multilineTextAlignment(.trailing)
                                 .onChange(of: quantity ?? 0) { newValue in
@@ -170,8 +169,11 @@ struct AddInventoryItemView: View {
                                     }
                                                  .onChange(of: itemImage) { newImage in
                                                      Task {
-                                                         if let data = try? await newImage?.loadTransferable(type: Data.self) {
-                                                             self.imageData = data
+                                                         if let data = try? await newImage?.loadTransferable(type: Data.self), let uiImage = UIImage(data: data) {
+                                                             if let compressedImageData = uiImage.jpegData(compressionQuality: 0.1) {
+                                                                 self.imageData = compressedImageData
+                                                             }
+                                                             
                                                          }
                                                      }
                                                  }

@@ -12,10 +12,21 @@ struct HomeView: View {
 
     @State private var presentingAddToInventorySheet: Bool = false
     @State private var presentingSellItemSheet: Bool = false
+    @State private var showingiCloudSyncInfoMessage: Bool = false
 
     var body: some View {
         VStack {
             HStack {
+                Button {
+                    self.showingiCloudSyncInfoMessage.toggle()
+                } label: {
+                    Image(systemName: "cloud.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 20)
+                        .foregroundStyle(.accent)
+                        .shadow(color: .black, radius: 2, x: -1, y: 1)
+                }
                 Spacer()
                 Menu {
                     Button {
@@ -51,5 +62,11 @@ struct HomeView: View {
         .sheet(isPresented: $presentingSellItemSheet) {
             InventoryView(searchMode: .inventory, sellMode: true)
         }
+        .alert("iCloud Sync", isPresented: $showingiCloudSyncInfoMessage) {
+            //
+        } message: {
+            Text("Data stored in Just Flip It is synced to your personal iCloud. Visit Settings > iCloud > to ensure you have the space available. Storing images will greatly increase the space required. If you reinstalled the app, and had data previously, allow up to five minutes for data to automatically sync.")
+        }
+
     }
 }

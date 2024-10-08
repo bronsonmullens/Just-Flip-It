@@ -13,6 +13,7 @@ class ItemController: ObservableObject {
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
+        compressImages()
         migrateData()
         
         Purchases.shared.getCustomerInfo { customerInfo, error in
@@ -189,11 +190,59 @@ class ItemController: ObservableObject {
         context.insert(newItem)
         log.info("Added duplicated item to inventory.")
     }
+    
+    func compressImages() {
+        // TODO: Temporary fix because the app is running out of memory and crashing. Only fix at the moment is to compress the images.
+        if let imagesWereCompressed = UserDefaults.standard.value(forKey: "imagesWereCompressed"), imagesWereCompressed as? Bool == true {
+            log.debug("Aborting image compression - imagesWereCompressed")
+            return
+        } else {
+            do {
+                // 1. Fetch data
+                let context = ModelContext(modelContainer)
+                let inventoryItemsFetchDescriptor = FetchDescriptor<Item>(predicate: #Predicate { $0.soldPrice == nil })
+                let soldItemsFetchDescriptor = FetchDescriptor<Item>(predicate: #Predicate { $0.soldPrice != nil })
+                let inventoryItems = try context.fetch(inventoryItemsFetchDescriptor)
+                let soldItems = try context.fetch(soldItemsFetchDescriptor)
+                
+                if inventoryItems.isEmpty && soldItems.isEmpty {
+                    log.info("Returning from image compression - no items")
+                    return
+                }
+                
+                // 2. Loop through the items
+                for item in inventoryItems {
+                    // 3. If the item has an image, compress and replace it
+                    if let imageData = item.imageData {
+                        let compressedImageData = UIImage(data: imageData)?.jpegData(compressionQuality: 0.1)
+                        item.imageData = compressedImageData
+                        log.info("Updated \(item.title)'s image with compressed version")
+                    }
+                }
+                
+                for item in soldItems {
+                    // 3. If the item has an image, compress and replace it
+                    if let imageData = item.imageData {
+                        let compressedImageData = UIImage(data: imageData)?.jpegData(compressionQuality: 0.2)
+                        item.imageData = compressedImageData
+                        log.info("Updated \(item.title)'s image with compressed version")
+                    }
+                }
+                
+                log.info("Finished image compression script.")
+                
+                // Image compression complete - don't do it again
+                UserDefaults.standard.setValue(true, forKey: "imagesWereCompressed")
+            } catch {
+                log.error("Error compressing image data: \(error.localizedDescription)")
+            }
+        }
+    }
 
     // MARK: - Migration
 
     func migrateData() {
-        if let dataWasMigrated = UserDefaults.standard.value(forKey: "dataWasMigrated"), dataWasMigrated as! Bool == true {
+        if let dataWasMigrated = UserDefaults.standard.value(forKey: "dataWasMigrated"), dataWasMigrated as? Bool == true {
             log.debug("Aborting data migration - dataWasMigrated is set to true")
             return
         }

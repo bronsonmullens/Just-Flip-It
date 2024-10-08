@@ -14,7 +14,7 @@ class Item: Identifiable {
     var title: String = ""
     var id: String = UUID().uuidString
     var dateAdded: Date? = Date()
-    var imageData: Data?
+    @Attribute(.externalStorage) var imageData: Data?
     var quantity: Int = 1
     var deleteWhenQuantityReachesZero: Bool = true
     var purchaseDate: Date?

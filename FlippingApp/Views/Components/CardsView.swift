@@ -97,16 +97,19 @@ fileprivate struct TotalValueCardContent: View {
             }
 
             Spacer()
-
+            
             VStack(alignment: .trailing) {
-                Spacer()
                 Text("Item Count")
                     .font(.headline)
-                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
-                Text("\(inventoryCount)")
+                Text("\(inventoryCount.formatted())")
                     .font(.title)
-                    .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
+                
+                Text("Total Listings")
+                    .font(.headline)
+                Text("\(items.count.formatted())")
+                    .font(.title)
             }
+            .foregroundStyle(Color("\(itemController.selectedTheme.rawValue)Text"))
         }
         .padding()
     }
