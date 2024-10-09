@@ -205,11 +205,6 @@ class ItemController: ObservableObject {
                 let inventoryItems = try context.fetch(inventoryItemsFetchDescriptor)
                 let soldItems = try context.fetch(soldItemsFetchDescriptor)
                 
-                if inventoryItems.isEmpty && soldItems.isEmpty {
-                    log.info("Returning from image compression - no items")
-                    return
-                }
-                
                 // 2. Loop through the items
                 for item in inventoryItems {
                     // 3. If the item has an image, compress and replace it
