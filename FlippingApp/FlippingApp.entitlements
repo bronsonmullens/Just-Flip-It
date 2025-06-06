@@ -8,6 +8,8 @@
 	<array>
 		<string>iCloud.com.bronsonmullens.JustFlipIt</string>
 	</array>
+	<key>App Uses Non-Exempt Encryption</key>
+	<false/>
 	<key>com.apple.developer.icloud-services</key>
 	<array>
 		<string>CloudKit</string>
